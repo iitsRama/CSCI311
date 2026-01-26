@@ -43,7 +43,7 @@ int collatzLength(int n){
 
 void printStats(const vector<int> &v)
 {
-  if(v.size() == 0) { exit -1; }
+  if(v.size() == 0) { exit; }
 
   int minimum = v.front();
 
