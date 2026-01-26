@@ -18,73 +18,106 @@ using namespace std;
 //given any integer n, if n is even: n/2, if n id odd: 3n+1, until n = 1, return # of steps
 int collatzLength(int n){
 
-  int count = 0;
-
   //make sure n is not 0
   if(n == 0) { return 0; }
 
-  //when n reaches 1, return step count, at the start to check if n = 1
-  //absolute value accounts for possible negative integers
-  if(abs(n) == 1) { return count; }
+  int count = 0;
 
-  //if n mod 2 returns 0, n is even, then divide by 2 and increment step count
-  if(n % 2 == 0)
+  while(abs(n) != 1)
   {
-    n = n / 2;
-    count++;
+    if(n % 2 == 0)
+    {
+      n /= 2;
+      count++;
+    }
+    else
+    {
+      n = (3 * n) + 1;
+      count++;
+    }
   }
-  //else n must be odd, multiply by 3 and add 1, increment step count
-  else
-  {
-    n = (3 * n) + 1;
-    count++;
-  }
+
+  return count;
 }
 
 void printStats(const vector<int> &v)
 {
-  if(v.size() == 0) { exit; }
+  if(v.size() == 0) 
+  {
+    std::cout << "Empty vector" << std::endl;
+    return;
+  }
 
   int minimum = v.front();
+  int maximum = v.front();
+  float sum = v.front();
+  
+  for(int i = 1; i < v.size(); i++)
+  {
+    sum += v[i];
 
-  int maximum = v.back();
+    if(v[i] > maximum)
+    {
+      maximum = v[i];
+    }
+    if(v[i] < minimum)
+    {
+      minimum = v[i];
+    }
+  }
 
-  int median = v[v.size() / 2];
+  float mean = sum / (v.size());
 
-  std::cout << minimum << " " << median << " " << maximum << " " << std::endl;
+  std::cout << minimum << " " << mean << " " << maximum << std::endl;
 }
 
 int sumMultiples(const vector<int> &v, int n)
 {
-  if(v.size() == 0 || n <= 0) { return 0; }
+  if(v.empty() || n <= 0) { return 0; }
 
-  int index = 0;
-  int total = 0;
+  int sum = 0;
+  vector<int> multiples;
 
-  while(index <= v.size())
+  for(int i = 0; i < v.size(); i++)
   {
-    int value = v[index];
-    while(value < n)
+    int value = v[i];
+    for(int tempVal = value; tempVal < n; tempVal += value)
     {
-      total += value;
-      value *= 2;
+      bool duplicate = false;
+
+      for(int j = 0; j < multiples.size(); j++)
+      {
+        if(multiples[j] == tempVal)
+        {
+          duplicate = true;
+          break;
+        }
+      }
+
+      if(!duplicate)
+      {
+        multiples.push_back(tempVal);
+        sum += tempVal;
+      }
     }
-    
-    index++;
   }
 
-  return total;
+  return sum;
 }
 
 void greaterThanK(vector<int> &v, int k)
 {
+  vector<int> temp;
+
   for(int i = 0; i < v.size(); i++)
   {
-    if(k > v[i])
+    if(k < v[i])
     {
-      v.erase(v.begin() + i);
+      temp.push_back(v[i]);
     }
   }
+
+  v = temp;
 }
 
 bool isSubarray(const vector<string> &a, const vector<string> &b)
@@ -115,27 +148,26 @@ bool isSubarray(const vector<string> &a, const vector<string> &b)
 
 bool isPrimeA(int n)
 {
+  if(n < 2) { return false; }
 
   int i = 2;
 
   while(i < n)
   {
-    if(i % n == 0) { return true; }
+    if(n % i == 0) { return false; }
     i++;
   }
   
-  return false;
+  return true;
 }
 
 int sumPrimesA(int n)
 {
-
-  bool isPrime = false;
   int sum = 0;
 
   while(n > 0)
   {
-    isPrime = isPrimeA(n);
+    bool isPrime = isPrimeA(n);
 
     if(isPrime) { sum += n; }
     
@@ -147,27 +179,26 @@ int sumPrimesA(int n)
 
 bool isPrimeB(int n)
 {
+  if(n < 2) { return false; }
 
   int i = 2;
 
   while(i <= sqrt(n))
   {
-    if(i % n == 0) { return true; }
+    if(n % i == 0) { return false; }
     i++;
   }
 
-  return false;
+  return true;
 }
 
 int sumPrimesB(int n)
 {
-
-  bool isPrime = false;
   int sum = 0;
 
   while(n > 0)
   {
-    isPrime = isPrimeB(n);
+    bool isPrime = isPrimeB(n);
 
     if(isPrime) { sum += n; }
     
@@ -186,20 +217,20 @@ int sieveOfEratosthenes(int n)
 
   int sum = 0;
 
-  while(a < n - 1)
+  while(a <= n - 1)
   {
     v.push_back(a);
     a++;
   }
 
   int i = 2;
-  while(i < sqrt(n))
+  while(i <= sqrt(n))
   {
     int index = i;
 
     while(index < v.size())
     {
-      if(index % i == 0)
+      if(v[index] % i == 0)
       {
         v[index] = 0;
       }
