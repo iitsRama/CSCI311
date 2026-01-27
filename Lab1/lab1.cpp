@@ -21,15 +21,19 @@ int collatzLength(int n){
   //make sure n is not 0
   if(n == 0) { return 0; }
 
+  //initiate variable to count number of steps
   int count = 0;
 
+  //while |n| != 1; this ensures negative numbers are also allowed.
   while(abs(n) != 1)
   {
+    //if n is even n = n/2, increase count
     if(n % 2 == 0)
     {
       n /= 2;
       count++;
     }
+    //else n must be odd. n = 3n+1, increase count
     else
     {
       n = (3 * n) + 1;
@@ -37,56 +41,76 @@ int collatzLength(int n){
     }
   }
 
+  //return count
   return count;
 }
 
+//given a vector v, print the minimum, maximum, and mean values
 void printStats(const vector<int> &v)
 {
-  if(v.size() == 0) 
+  //if v is empty, cout empty vector
+  if(v.empty()) 
   {
     std::cout << "Empty vector" << std::endl;
     return;
   }
 
+  // set all values to first element of v
   int minimum = v.front();
   int maximum = v.front();
   float sum = v.front();
   
+  //loop through v, start at 1 since we already have the first element set to all variables
   for(int i = 1; i < v.size(); i++)
   {
+    //calculate sum to allow mean calculation
     sum += v[i];
 
+    //if current element > max, set max = current element
     if(v[i] > maximum)
     {
       maximum = v[i];
     }
+    //if current element < min, set min = current element
     if(v[i] < minimum)
     {
       minimum = v[i];
     }
   }
 
+  //calculate mean by dividing sum by size of vector
   float mean = sum / (v.size());
 
+  //print "min mean max"
   std::cout << minimum << " " << mean << " " << maximum << std::endl;
 }
 
+//calculates the the sum of all multiples of elements in vector v
 int sumMultiples(const vector<int> &v, int n)
 {
-  if(v.empty() || n <= 0) { return 0; }
+  //if v is empty return 0
+  if(v.empty()) { return 0; }
 
+  //initialize sum variable and a temporary vector to hold all multiples
   int sum = 0;
   vector<int> multiples;
 
+  //loop through v
   for(int i = 0; i < v.size(); i++)
   {
+    //value = current value
     int value = v[i];
+
+    //calculate, sum, and add to vector the multiples of the current value
     for(int tempVal = value; tempVal < n; tempVal += value)
     {
+      //boolean flag allows us to track duplicates
       bool duplicate = false;
 
+      //loop through temp val checking for duplicates
       for(int j = 0; j < multiples.size(); j++)
       {
+        //if duplicate, set boolean flag true, break
         if(multiples[j] == tempVal)
         {
           duplicate = true;
@@ -94,6 +118,7 @@ int sumMultiples(const vector<int> &v, int n)
         }
       }
 
+      //if not duplicate, push value to multiples vector, append sum
       if(!duplicate)
       {
         multiples.push_back(tempVal);
@@ -105,62 +130,89 @@ int sumMultiples(const vector<int> &v, int n)
   return sum;
 }
 
+//remove values in vector v which are greater than or equal to integer k
 void greaterThanK(vector<int> &v, int k)
 {
+  //set temporary vector
   vector<int> temp;
 
+  //iterate through v
   for(int i = 0; i < v.size(); i++)
   {
+    //check k against current value, if k < value: push value into temporary vector
     if(k < v[i])
     {
       temp.push_back(v[i]);
     }
   }
 
+  //set v = temporary vector, this only has values that were greater than or equal to k
   v = temp;
 }
 
+//find out whether array a is a subarray of array b, contiguity matters.
 bool isSubarray(const vector<string> &a, const vector<string> &b)
 {
-  //edge cases 
+  //edge cases
+  //if a is empty it will be a subarray of any array b
+  //if a is bigger than b it cannot be a subarray of b
   if(a.size() == 0) { return true; }
   if(a.size() > b.size()) { return false; }
 
+  //loop through b
   for(int i = 0; i < b.size(); i++)
   {
+    //check current element of b against first element of a. 
+    //if that element matches:
     if(a[0] == b[i])
     {
+      //set the current index of a and b to be 0 and i respectively
       int indexA = 0;
       int indexB = i;
 
+      //while:
+      //indexA is in bounds
+      //indexB is in bounds
+      //current a = current b:
       while(indexA < a.size() && indexB < b.size() && a[indexA] == b[indexB])
       {
+        //increment indeces
         indexA++;
         indexB++;
       }
       
+      //if above conditional allowed all elements of a to be counted for, or if
+      //indexA = size of a, then a must be a subarray of b, return true
       if(indexA == a.size()) { return true; }
     }
   }
 
+  //default return false
   return false;
 }
 
+//check primality of n
 bool isPrimeA(int n)
 {
+  //if n < 2, return false as 1, 0 are not prime
   if(n < 2) { return false; }
 
+  //initialize i at 2
   int i = 2;
 
+  //while i < n
   while(i < n)
   {
+    //if remainder of n / i = 0, n is not prime, as it is divisible by some i
     if(n % i == 0) { return false; }
     i++;
   }
   
+  //default return true
   return true;
 }
 
+//
 int sumPrimesA(int n)
 {
   int sum = 0;
