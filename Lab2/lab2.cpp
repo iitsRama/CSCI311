@@ -1,5 +1,5 @@
 // Lab 2 Skeleton
-// Author: *** YOUR NAME HERE ***
+// Author: Amar Bulic, ID: 013040249
 
 #include <iostream>
 #include <vector>
@@ -11,47 +11,75 @@ using namespace std;
  * Your solutions go below here and do not change the headers*
  * ***********************************************************/
 
-int triangleNum(int n){
+int triangleNum(int n)
+{
+  if(n > 0)
+  {
+    return n + triangleNum(n - 1);
+  }
+  else
+  {
+    return 0;
+  }
+}
+
+int rFib(int n)
+{
+
   return 0;
 }
 
-int rFib(int n){
+int rSumHelper(const vector<int> &v, int i)
+{
+
   return 0;
 }
 
-int rSumHelper(const vector<int> &v, int i){
+int rSum(const vector<int> &v)
+{
+
   return 0;
 }
 
-int rSum(const vector<int> &v){
+int rMaxHelper(const vector<int> &v, int start)
+{
+
   return 0;
 }
 
-int rMaxHelper(const vector<int> &v, int start){
+int rMax(const vector<int> &v)
+{
+
   return 0;
 }
 
-int rMax(const vector<int> &v){
-  return 0;
-}
+bool isSorted(const vector<int> &v, int start, int end)
+{
 
-bool isSorted(const vector<int> &v, int start, int end){
   return false;
 }
 
-bool isPalindromeHelper(string s, int start, int end){
+bool isPalindromeHelper(string s, int start, int end)
+{
+
   return false;
 }
 
-bool isPalindrome(string s){
+bool isPalindrome(string s)
+{
+
   return false;
 }
 
-int rBinarySearch(const vector<int> &v, int low, int high, int target){
+int rBinarySearch(const vector<int> &v, int low, int high, int target)
+{
+
   return 0;
 }
 
-bool rSubsetSum(const vector<int> &v, int start, int target){
+bool rSubsetSum(const vector<int> &v, int start, int target)
+{
+
   return 0;
 }
 
