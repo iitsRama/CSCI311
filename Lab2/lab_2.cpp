@@ -11,8 +11,12 @@ using namespace std;
  * Your solutions go below here and do not change the headers*
  * ***********************************************************/
 
+ // Calculates the number of points required to construct a triangle with n dots recursively
 int triangleNum(int n)
 {
+  // Break case for recursive call
+  // When triangleNum(n-1) called, n = n-1, n - 1 = n - 2, etc, etc. When n = 0 is reached, it will return backwards from the lowest number n - x
+  //      to n, summing them all up
   if(n > 0)
   {
     return n + triangleNum(n - 1);
@@ -25,8 +29,8 @@ int triangleNum(int n)
 
 int rFib(int n)
 {
-
-  return 0;
+  // if n <= 1 return n, else return rFib(n-1) + rFib(n-2)
+  return (n <= 1) ? n : (rFib(n - 1) + rFib (n - 2));
 }
 
 int rSumHelper(const vector<int> &v, int i)
