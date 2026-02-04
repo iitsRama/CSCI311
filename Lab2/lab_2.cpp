@@ -86,22 +86,19 @@ int rBinarySearch(const vector<int> &v, int low, int high, int target)
   return(v[middle] < target) ? rBinarySearch(v, middle + 1, high, target) : rBinarySearch(v, low, middle - 1, target);
 }
 
+bool rSubsetHelper(const vector<int> &v, int start, int target, int sum)
+{
+  if(sum == target) { return true; }
+  if(start == v.size()) { return false; }
+  else
+  {
+    return rSubsetHelper(v, start + 1, target, sum + v[start]) || rSubsetHelper(v, start + 1, target, sum); 
+  }
+}
+
 bool rSubsetSum(const vector<int> &v, int start, int target)
 {
-
-  if(v.empty()) { return true; }
-  if(start > v.size()) { return false; }
-
-  int sum = 0;
-
-  if(start < v.size())
-  {
-    sum += v[start];
-    if(sum == target) { return true; }
-    else{ return rSubsetSum(v, start + 1, target); }
-  }
-
-  return false;
+  return rSubsetHelper(v, 0, target, 0);
 }
 
 /***********************************************
