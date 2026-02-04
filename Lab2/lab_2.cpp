@@ -17,14 +17,7 @@ int triangleNum(int n)
   // Break case for recursive call
   // When triangleNum(n-1) called, n = n-1, n - 1 = n - 2, etc, etc. When n = 0 is reached, it will return backwards from the lowest number n - x
   //      to n, summing them all up
-  if(n > 0)
-  {
-    return n + triangleNum(n - 1);
-  }
-  else
-  {
-    return 0;
-  }
+  return (n > 0) ? n + triangleNum(n - 1) : 0;
 }
 
 int rFib(int n)
@@ -35,56 +28,80 @@ int rFib(int n)
 
 int rSumHelper(const vector<int> &v, int i)
 {
-
-  return 0;
+  return (i < v.size()) ? v[i] + rSumHelper(v, i + 1) : 0; 
 }
 
 int rSum(const vector<int> &v)
 {
-
-  return 0;
+  return rSumHelper(v, 0);
 }
 
 int rMaxHelper(const vector<int> &v, int start)
 {
+  if(v.size() == 0) { return INT_MIN; }
 
-  return 0;
+  else if(start < v.size() && start >= 0)
+  {
+    return max(v[start],rMaxHelper(v, start + 1));
+  }
+
+  else { return 0; }
 }
 
 int rMax(const vector<int> &v)
 {
-
-  return 0;
+  return rMaxHelper(v, 0);
 }
 
 bool isSorted(const vector<int> &v, int start, int end)
 {
+  if(start >= end || v.size() == 1 || v.size() == 0) { return true; }
 
-  return false;
+  else
+  {
+    return (v[start] <= v[start + 1]) ? isSorted(v, start + 1, end) : false;
+  }
 }
 
 bool isPalindromeHelper(string s, int start, int end)
 {
+  if(s.size() == 0 || s.size() == 1 || start > end) { return true ; }
 
-  return false;
+  else
+  {
+    return (s[start] == s[end]) ? isPalindromeHelper(s, start + 1, end - 1) : false;
+  }
 }
 
 bool isPalindrome(string s)
 {
-
-  return false;
+  return isPalindromeHelper(s, 0, s.length() - 1);
 }
 
 int rBinarySearch(const vector<int> &v, int low, int high, int target)
 {
-
-  return 0;
+  if(v.size() == 0 || low > high) { return -1; }
+  int middle = (low + high) / 2;
+  if(v[middle] == target) { return middle; }
+  return(v[middle] < target) ? rBinarySearch(v, middle + 1, high, target) : rBinarySearch(v, low, middle - 1, target);
 }
 
 bool rSubsetSum(const vector<int> &v, int start, int target)
 {
 
-  return 0;
+  if(v.empty()) { return true; }
+  if(start > v.size()) { return false; }
+
+  int sum = 0;
+
+  if(start < v.size())
+  {
+    sum += v[start];
+    if(sum == target) { return true; }
+    else{ return rSubsetSum(v, start + 1, target); }
+  }
+
+  return false;
 }
 
 /***********************************************
