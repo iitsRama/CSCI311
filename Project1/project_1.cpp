@@ -6,20 +6,29 @@ using namespace std;
 #include <chrono>
 #include <fstream>
 
-bool isSorted(const vector<int> &v, int start, int end)
-{
-  // if start index >= end index, size <= 1, return true. 
-  // size 0 and 1 vector will always be sorted
-  // if start index reaches end index, false case never triggered, therefor must be sorted.
-  if(start >= end || v.size() == 1 || v.size() == 0) { return true; }
+// bool isSorted(const vector<int> &v, int start, int end)
+// {
+//   // if start index >= end index, size <= 1, return true. 
+//   // size 0 and 1 vector will always be sorted
+//   // if start index reaches end index, false case never triggered, therefor must be sorted.
+//   if(start >= end || v.size() == 1 || v.size() == 0) { return true; }
 
-  // Checks all cases, only if no case returns false does the above if statement trigger
-  else
-  {
-    // if v[i] <= v[i+1], or if v in ascending order for those two indices, test [i+1] against [i+2] until i reaches end value
-    // return false if any v[i-1] > v[i];
-    return (v[start] <= v[start + 1]) ? isSorted(v, start + 1, end) : false;
-  }
+//   // Checks all cases, only if no case returns false does the above if statement trigger
+//   else
+//   {
+//     // if v[i] <= v[i+1], or if v in ascending order for those two indices, test [i+1] against [i+2] until i reaches end value
+//     // return false if any v[i-1] > v[i];
+//     return (v[start] <= v[start + 1]) ? isSorted(v, start + 1, end) : false;
+//   }
+// }
+
+bool isSorted(const vector<int> &v)
+{
+    for (int i = 1; i < v.size(); i++)
+    {
+        if (v[i-1] > v[i]) return false;
+    }
+    return true;
 }
 
 vector<int> bubbleSort(vector<int> &v)
@@ -133,48 +142,48 @@ void printVector(const vector<int> &v)
     {
         std::cout << v[i] << ", ";
     }
-    std::cout << v[v.size() - 1] << "}" << std::endl;
+    std::cout << v[v.size()] << "}" << std::endl;
 }
 
-void runSorts(const std::string& name, const std::vector<int>& v)
-{
-    std::cout << name << ": " << v.size() << " elements" << std::endl;
+// void runSorts(const std::string& name, const std::vector<int>& v)
+// {
+//     std::cout << name << ": " << v.size() << " elements" << std::endl;
 
-    std::vector<int> Z;
+//     std::vector<int> Z;
 
-    Z = v;
-    std::cout << "ORIGINAL  - " << Z.size() << ": ";
-    printVector(Z);
+//     Z = v;
+//     std::cout << "ORIGINAL  - " << Z.size() << ": ";
+//     printVector(Z);
 
-    Z = v;
-    bubbleSort(Z);
-    std::cout << "BUBBLE    - " << Z.size() << ": ";
-    printVector(Z);
-    std::cout << "  sorted? " << (isSorted(Z, 0, Z.size() - 1) ? "YES" : "NO") << std::endl;
+//     Z = v;
+//     bubbleSort(Z);
+//     std::cout << "BUBBLE    - " << Z.size() << ": ";
+//     printVector(Z);
+//     std::cout << "  sorted? " << (isSorted(Z, 0, Z.size() - 1) ? "YES" : "NO") << std::endl;
 
-    Z = v;
-    insertionSort(Z);
-    std::cout << "INSERTION - " << Z.size() << ": ";
-    printVector(Z);
-    std::cout << "  sorted? " << (isSorted(Z, 0, Z.size() - 1) ? "YES" : "NO") << std::endl;
+//     Z = v;
+//     insertionSort(Z);
+//     std::cout << "INSERTION - " << Z.size() << ": ";
+//     printVector(Z);
+//     std::cout << "  sorted? " << (isSorted(Z, 0, Z.size() - 1) ? "YES" : "NO") << std::endl;
 
-    Z = v;
-    selecionSort(Z);
-    std::cout << "SELECTION - " << Z.size() << ": ";
-    printVector(Z);  
-    std::cout << "  sorted? " << (isSorted(Z, 0, Z.size() - 1) ? "YES" : "NO") << std::endl;
+//     Z = v;
+//     selecionSort(Z);
+//     std::cout << "SELECTION - " << Z.size() << ": ";
+//     printVector(Z);  
+//     std::cout << "  sorted? " << (isSorted(Z, 0, Z.size() - 1) ? "YES" : "NO") << std::endl;
 
-    Z = v;
-    quickSort(Z);
-    std::cout << "QUICK     - " << Z.size() << ": ";
-    printVector(Z);
-    std::cout << "  sorted? " << (isSorted(Z, 0, Z.size() - 1) ? "YES" : "NO") << std::endl;
-}
+//     Z = v;
+//     quickSort(Z);
+//     std::cout << "QUICK     - " << Z.size() << ": ";
+//     printVector(Z);
+//     std::cout << "  sorted? " << (isSorted(Z, 0, Z.size() - 1) ? "YES" : "NO") << std::endl;
+// }
 
-void personalTest(const vector<int> &v)
-{
-    runSorts("A", v);
-}
+// void personalTest(const vector<int> &v)
+// {
+//     runSorts("A", v);
+// }
 
 
 
@@ -221,27 +230,24 @@ double timeSort(vector<int> &v, std::vector<int> (*sortFunc)(std::vector<int>&))
 {
     chrono::high_resolution_clock::time_point start;
     chrono::high_resolution_clock::time_point end;
-    start = chrono::high_resolution_clock::now();
+
     vector<int> Z = v;
+    start = chrono::high_resolution_clock::now();
     Z = sortFunc(Z);
     end = chrono::high_resolution_clock::now();
+
     double elapsed = chrono::duration_cast<chrono::duration<double>>(end - start).count();
-    std::cout << (isSorted(Z, 0, Z.size() - 1) ? "Sorting successful" : "Sorting failed");
+
+    std::cout << (isSorted(Z) ? "Sorting successful" : "Sorting failed");
     //printVector(Z);
     cout << "\nElapsed time: " << elapsed << endl;
     return elapsed;
 }
 
-void classTest(std::string sortName, vector<int> &v, std::vector<int> (*sortFunc)(std::vector<int>&))
+void classTest(vector<int> &v, std::vector<int> (*sortFunc)(std::vector<int>&))
 {
-    std::cout << "*************************" << std::endl;
-    std::cout << sortName << " sort on 10 vectors of length 100" << std::endl;
-
     vector<double> runTimes;
     runTimes.push_back(timeSort(v, sortFunc));
-
-    std::cout << std::endl;
-    std::cout << "*************************\n" << std::endl;
 }
 
 int main()
@@ -255,32 +261,45 @@ int main()
 
     for(int i = 0; i < 10; i++)
     {
-        List.push_back(randomVector(100, -1000, 1000));
+        List.push_back(randomVector(10000, -1000, 1000));
         //personalTest(List[i]);
     }
 
-    for(int a = 0; a < 4; a++)
+    std::cout << "*************************" << std::endl;
+    std::cout << "Bubble sort on 10 vectors of length " << List[0].size() << std::endl;
+    for(int a = 0; a < List.size(); a++)
     {
-        for(int b = 0; b < List.size(); b++)
-        {
-            switch(a)
-            {
-                case 0:
-                    //printVector(List[b]);
-                    classTest("Bubble", List[b], bubbleSort);
-                    break;
-                case 1:
-                    classTest("Insertion", List[b], insertionSort);
-                    break;
-                case 2:
-                    classTest("Selection", List[b], selecionSort);
-                    break;
-                case 3:
-                    classTest("Quick", List[b], quickSort);
-                    break;
-            }
-        }
+        classTest(List[a], bubbleSort);
     }
+    std::cout << std::endl;
+    std::cout << "*************************\n" << std::endl;
+
+    std::cout << "*************************" << std::endl;
+    std::cout << "Insertion sort on 10 vectors of length " << List[0].size() << std::endl;
+    for(int a = 0; a < List.size(); a++)
+    {
+        classTest(List[a], insertionSort);
+    }
+    std::cout << std::endl;
+    std::cout << "*************************\n" << std::endl;
+
+    std::cout << "*************************" << std::endl;
+    std::cout << "Selection sort on 10 vectors of length " << List[0].size() << std::endl;
+    for(int a = 0; a < List.size(); a++)
+    {
+        classTest(List[a], selecionSort);
+    }
+    std::cout << std::endl;
+    std::cout << "*************************\n" << std::endl;
+
+    std::cout << "*************************" << std::endl;
+    std::cout << "Quick sort on 10 vectors of length " << List[0].size() << std::endl;
+    for(int a = 0; a < List.size(); a++)
+    {
+        classTest(List[a], quickSort);
+    }
+    std::cout << std::endl;
+    std::cout << "*************************\n" << std::endl;
 
     file.close();
 
