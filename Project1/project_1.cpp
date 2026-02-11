@@ -6,22 +6,6 @@ using namespace std;
 #include <chrono>
 #include <fstream>
 
-// bool isSorted(const vector<int> &v, int start, int end)
-// {
-//   // if start index >= end index, size <= 1, return true. 
-//   // size 0 and 1 vector will always be sorted
-//   // if start index reaches end index, false case never triggered, therefor must be sorted.
-//   if(start >= end || v.size() == 1 || v.size() == 0) { return true; }
-
-//   // Checks all cases, only if no case returns false does the above if statement trigger
-//   else
-//   {
-//     // if v[i] <= v[i+1], or if v in ascending order for those two indices, test [i+1] against [i+2] until i reaches end value
-//     // return false if any v[i-1] > v[i];
-//     return (v[start] <= v[start + 1]) ? isSorted(v, start + 1, end) : false;
-//   }
-// }
-
 bool isSorted(const vector<int> &v)
 {
     for (int i = 1; i < v.size(); i++)
@@ -142,50 +126,8 @@ void printVector(const vector<int> &v)
     {
         std::cout << v[i] << ", ";
     }
-    std::cout << v[v.size()] << "}" << std::endl;
+    std::cout << v[v.size() - 1] << "}" << std::endl;
 }
-
-// void runSorts(const std::string& name, const std::vector<int>& v)
-// {
-//     std::cout << name << ": " << v.size() << " elements" << std::endl;
-
-//     std::vector<int> Z;
-
-//     Z = v;
-//     std::cout << "ORIGINAL  - " << Z.size() << ": ";
-//     printVector(Z);
-
-//     Z = v;
-//     bubbleSort(Z);
-//     std::cout << "BUBBLE    - " << Z.size() << ": ";
-//     printVector(Z);
-//     std::cout << "  sorted? " << (isSorted(Z, 0, Z.size() - 1) ? "YES" : "NO") << std::endl;
-
-//     Z = v;
-//     insertionSort(Z);
-//     std::cout << "INSERTION - " << Z.size() << ": ";
-//     printVector(Z);
-//     std::cout << "  sorted? " << (isSorted(Z, 0, Z.size() - 1) ? "YES" : "NO") << std::endl;
-
-//     Z = v;
-//     selecionSort(Z);
-//     std::cout << "SELECTION - " << Z.size() << ": ";
-//     printVector(Z);  
-//     std::cout << "  sorted? " << (isSorted(Z, 0, Z.size() - 1) ? "YES" : "NO") << std::endl;
-
-//     Z = v;
-//     quickSort(Z);
-//     std::cout << "QUICK     - " << Z.size() << ": ";
-//     printVector(Z);
-//     std::cout << "  sorted? " << (isSorted(Z, 0, Z.size() - 1) ? "YES" : "NO") << std::endl;
-// }
-
-// void personalTest(const vector<int> &v)
-// {
-//     runSorts("A", v);
-// }
-
-
 
 /******************************************************************************
 * Generate a vector of random integers in a given range. The ends *
@@ -226,7 +168,7 @@ double sampleSD(const vector<double> v)
     return sqrt(sd);
 }
 
-double timeSort(vector<int> &v, std::vector<int> (*sortFunc)(std::vector<int>&))
+double timeSort(const vector<int> &v, std::vector<int> (*sortFunc)(std::vector<int>&))
 {
     chrono::high_resolution_clock::time_point start;
     chrono::high_resolution_clock::time_point end;
@@ -238,17 +180,46 @@ double timeSort(vector<int> &v, std::vector<int> (*sortFunc)(std::vector<int>&))
 
     double elapsed = chrono::duration_cast<chrono::duration<double>>(end - start).count();
 
-    std::cout << (isSorted(Z) ? "Sorting successful" : "Sorting failed");
+    std::cout << (isSorted(Z) ? "Sorting successful\n" : "Sorting failed\n");
     //printVector(Z);
-    cout << "\nElapsed time: " << elapsed << endl;
+    //cout << "\nElapsed time: " << elapsed << endl;
     return elapsed;
 }
 
-// void classTest(vector<int> &v, std::vector<int> (*sortFunc)(std::vector<int>&))
-// {
-//     vector<double> runTimes;
-//     runTimes.push_back(timeSort(v, sortFunc));
-// }
+vector<double> calculateTime(const vector<double> &v)
+{
+    // <Min, Mean, StdDev, Max
+
+    vector<double> timeOutliers;
+
+    double minimum = v[0];
+    double maximum = v[0];
+    double sum = 0;
+
+    for(int i = 1; i < v.size(); i++)
+    {
+        sum += v[i];
+        if(v[i] < minimum)
+        {
+            minimum = v[i];
+        }
+        if(v[i] > maximum)
+        {
+            maximum = v[i];
+        }
+    }
+
+    double mean = sum / v.size();
+
+    double stdDev = sampleSD(v);
+    
+    timeOutliers.push_back(minimum);
+    timeOutliers.push_back(mean);
+    timeOutliers.push_back(stdDev);
+    timeOutliers.push_back(maximum);
+
+    return timeOutliers;
+}
 
 int main()
 {
@@ -256,51 +227,86 @@ int main()
 
     srand(time(NULL));
 
-    vector<vector<int>> List;
+    vector<vector<int>> list;
+    vector<vector<int>> copies;
 
     for(int i = 0; i < 10; i++)
     {
-        List.push_back(randomVector(10000, -1000, 1000));
-        //personalTest(List[i]);
+        list.push_back(randomVector(1000, -10000, 10000));
+        //personalTest(list[i]);
     }
 
+    vector<double> timeValues;
+    vector<double> timeOutliers;
+    bool sorted = false;
+
+    // MAKE A VECTOR OF COPIES OF VECTORS ABOVE, MAY HELP WITH SORTING SUCCESSFUL OUTPUT, WILL ALLOW ME TO ACTUALLY SORT THE PASSED VECTOR SO I CAN CHECK THAT VECTOR ALONE INSTEAD OF A COPY
+
     std::cout << "*************************" << std::endl;
-    std::cout << "Bubble sort on 10 vectors of length " << List[0].size() << std::endl;
-    for(int a = 0; a < List.size(); a++)
+    std::cout << "Bubble sort on 10 vectors of length " << list[0].size() << std::endl;
+    for(int i = 0; i < list.size(); i++)
     {
-        double bubble = timeSort(List[a], bubbleSort);
-        file << "Bubble" << ", " << List[a].size() << ", " << bubble << std::endl;
+        // printVector(list[i]);
+        double bubble = timeSort(list[i], bubbleSort);
+        timeValues.push_back(bubble);
+        file << "Bubble" << ", " << list[i].size() << ", " << bubble << std::endl;
     }
+    timeOutliers = calculateTime(timeValues);
+    std::cout << "Minimum: " << timeOutliers[0] << "; Mean: " << timeOutliers[1] << "; Standard Deviation: " << timeOutliers[2] << "; Maximum: " << timeOutliers[3] << std::endl;
+    timeValues.clear();
+    timeOutliers.clear();
+
     std::cout << std::endl;
     std::cout << "*************************\n" << std::endl;
 
     std::cout << "*************************" << std::endl;
-    std::cout << "Insertion sort on 10 vectors of length " << List[0].size() << std::endl;
-    for(int a = 0; a < List.size(); a++)
+    std::cout << "Insertion sort on 10 vectors of length " << list[0].size() << std::endl;
+    for(int i = 0; i < list.size(); i++)
     {
-        double insertion = timeSort(List[a], insertionSort);
-        file << "Insertion" << ", " << List[a].size() << ", " << insertion << std::endl;
+        // printVector(list[i]);
+        double insertion = timeSort(list[i], insertionSort);
+        timeValues.push_back(insertion);
+        file << "Insertion" << ", " << list[i].size() << ", " << insertion << std::endl;
     }
+    timeOutliers = calculateTime(timeValues);
+    std::cout << "Minimum: " << timeOutliers[0] << "; Mean: " << timeOutliers[1] << "; Standard Deviation: " << timeOutliers[2] << "; Maximum: " << timeOutliers[3] << std::endl;
+    timeValues.clear();
+    timeOutliers.clear();
+
     std::cout << std::endl;
     std::cout << "*************************\n" << std::endl;
 
     std::cout << "*************************" << std::endl;
-    std::cout << "Selection sort on 10 vectors of length " << List[0].size() << std::endl;
-    for(int a = 0; a < List.size(); a++)
+    std::cout << "Selection sort on 10 vectors of length " << list[0].size() << std::endl;
+    for(int i = 0; i < list.size(); i++)
     {
-        double selection = timeSort(List[a], selecionSort);
-        file << "Selection" << ", " << List[a].size() << ", " << selection << std::endl;
+        // printVector(list[i]);
+        double selection = timeSort(list[i], selecionSort);
+        timeValues.push_back(selection);
+        file << "Selection" << ", " << list[i].size() << ", " << selection << std::endl;
     }
+    timeOutliers = calculateTime(timeValues);
+    std::cout << "Minimum: " << timeOutliers[0] << "; Mean: " << timeOutliers[1] << "; Standard Deviation: " << timeOutliers[2] << "; Maximum: " << timeOutliers[3] << std::endl;
+    timeValues.clear();
+    timeOutliers.clear();
+
     std::cout << std::endl;
     std::cout << "*************************\n" << std::endl;
 
     std::cout << "*************************" << std::endl;
-    std::cout << "Quick sort on 10 vectors of length " << List[0].size() << std::endl;
-    for(int a = 0; a < List.size(); a++)
+    std::cout << "Quick sort on 10 vectors of length " << list[0].size() << std::endl;
+    for(int i = 0; i < list.size(); i++)
     {
-        double quick = timeSort(List[a], quickSort);
-        file << "Quick" << ", " << List[a].size() << ", " << quick << std::endl;
+        // printVector(list[i]);
+        double quick = timeSort(list[i], quickSort);
+        timeValues.push_back(quick);
+        file << "Quick" << ", " << list[i].size() << ", " << quick << std::endl;
     }
+    timeOutliers = calculateTime(timeValues);
+    std::cout << "Minimum: " << timeOutliers[0] << "; Mean: " << timeOutliers[1] << "; Standard Deviation: " << timeOutliers[2] << "; Maximum: " << timeOutliers[3] << std::endl;
+    timeValues.clear();
+    timeOutliers.clear();
+    
     std::cout << std::endl;
     std::cout << "*************************\n" << std::endl;
 
