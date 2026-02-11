@@ -1,7 +1,10 @@
 #include <iostream>
 using namespace std;
 #include <vector>
-#include <ctime>
+#include <time.h>
+#include <math.h>
+#include <chrono>
+#include <fstream>
 
 bool isSorted(const vector<int> &v, int start, int end)
 {
@@ -21,6 +24,8 @@ bool isSorted(const vector<int> &v, int start, int end)
 
 vector<int> bubbleSort(vector<int> &v)
 {
+    if (v.size() < 2) return v;
+
     vector<int> vCopy = v;
 
     bool sorted = false;
@@ -46,21 +51,25 @@ vector<int> bubbleSort(vector<int> &v)
 
 vector<int> insertionSort(vector<int> &v)
 {
+    if (v.size() < 2) return v;
+
     for(int i = 1; i < v.size(); i++)
     {
-        for(int j = 1; j > 0 && v[i] < v[i-1]; j--)
+        for(int j = i; j > 0 && v[j] < v[j-1]; j--)
         {
             int temp = v[j-1];
             v[j-1] = v[j];
             v[j] = temp;
         }
     }
-
+ 
     return v;
 }
 
 vector<int> selecionSort(vector<int> &v)
 {
+    if (v.size() < 2) return v;
+
     for(int i = 0; i < v.size() - 1; i++)
     {
         int uMin = i;
@@ -81,10 +90,7 @@ vector<int> selecionSort(vector<int> &v)
 
 vector<int> quickSort(vector<int> &v)
 {
-    if( v.size() <= 1)
-    {
-        return v;
-    }
+    if (v.size() < 2) return v;
 
     int pivot = v[0];
     vector<int> A = {};
@@ -94,28 +100,35 @@ vector<int> quickSort(vector<int> &v)
         if(v[i] <= pivot)
         {
             A.push_back(v[i]);
-            quickSort(A);
         }
         else
         {
             B.push_back(v[i]);
-            quickSort(B);
         }
     }
 
-    vector<int> C = A;
-    C.push_back(pivot);
+    A = quickSort(A);
+    B = quickSort(B);
+
+    v = A;
+    v.push_back(pivot);
     for(int j = 0; j < B.size(); j++)
     {
-        C.push_back(B[j]);
+        v.push_back(B[j]);
     }
 
-    return C;
+    return v;
 }
 
-void printVector(const vector<int> v)
+void printVector(const vector<int> &v)
 {
+    std:: cout << v.size() << std::endl;
     std::cout << "{";
+    if(v.size() == 0)
+    {
+        std::cout << "}" << std::endl;
+        return;
+    }
     for(int i = 0; i < v.size() - 1; i++)
     {
         std::cout << v[i] << ", ";
@@ -123,214 +136,153 @@ void printVector(const vector<int> v)
     std::cout << v[v.size() - 1] << "}" << std::endl;
 }
 
-// void test()
-// {
-//     vector<int> A = {8,6,3,10,9,1,14,15,7};                 // 9 elements
-//     vector<int> B = {14, 7, 5, 3, 9, 6, 1, 13, 55, 9, 0};   // 11 elements
-//     vector<int> C = {1,2,3,4,5,6,7,8,9};                    // 9 elements
-//     vector<int> D = {20,19,18,17,16,15,14,13};              // 8 elements
-//     vector<int> E = {1};                                    // 1 element
-//     vector<int> F = {};                                     // 0 elements
-
-//     if(!isSorted(A, 0, A.size()))
-//     {
-//         std::cout << "A:" << std::endl;
-
-//         vector<int> Z = A;
-//         std::cout << "ORIGINAL: ";
-//         printVector(Z);
-
-//         bubbleSort(Z);
-//         std::cout << "BUBBLE: ";
-//         printVector(Z);
-
-//         Z = A;
-//         insertionSort(Z);
-//         std::cout << "INSERTION: ";
-//         printVector(Z);
-
-//         Z = A;
-//         selecionSort(Z);
-//         std::cout << "SELECTION: ";
-//         printVector(Z);
-
-//         Z = A;
-//         quickSort(Z);
-//         std::cout << "QUICK: ";
-//         printVector(Z);
-//     }
-//     if(!isSorted(B, 0, B.size()))
-//     {
-//         std::cout << "B:" << std::endl;
-
-//         vector<int> Z = B;
-//         std::cout << "ORIGINAL: ";
-//         printVector(Z);
-
-//         bubbleSort(Z);
-//         std::cout << "BUBBLE: ";
-//         printVector(Z);
-
-//         Z = B;
-//         insertionSort(Z);
-//         std::cout << "INSERTION: ";
-//         printVector(Z);
-
-//         Z = B;
-//         selecionSort(Z);
-//         std::cout << "SELECTION: ";
-//         printVector(Z);
-        
-//         Z = B;
-//         quickSort(Z);
-//         std::cout << "QUICK: ";
-//         printVector(Z);
-//     }
-//     if(!isSorted(C, 0, C.size()))
-//     {
-//         std::cout << "C:" << std::endl;
-
-//         vector<int> Z = C;
-//         std::cout << "ORIGINAL: ";
-//         printVector(Z);
-
-//         bubbleSort(Z);
-//         std::cout << "BUBBLE: ";
-//         printVector(Z);
-
-//         Z = C;
-//         insertionSort(Z);
-//         std::cout << "INSERTION: ";
-//         printVector(Z);
-
-//         Z = C;
-//         selecionSort(Z);
-//         std::cout << "SELECTION: ";
-//         printVector(Z);
-        
-//         Z = C;
-//         quickSort(Z);
-//         std::cout << "QUICK: ";
-//         printVector(Z);
-//     }
-//     if(!isSorted(D, 0, D.size()))
-//     {
-//         std::cout << "D:" << std::endl;
-
-//         vector<int> Z = D;
-//         std::cout << "ORIGINAL: ";
-//         printVector(Z);
-
-//         bubbleSort(Z);
-//         std::cout << "BUBBLE: ";
-//         printVector(Z);
-
-//         Z = D;
-//         insertionSort(Z);
-//         std::cout << "INSERTION: ";
-//         printVector(Z);
-
-//         Z = D;
-//         selecionSort(Z);
-//         std::cout << "SELECTION: ";
-//         printVector(Z);
-        
-//         Z = D;
-//         quickSort(Z);
-//         std::cout << "QUICK: ";
-//         printVector(Z);
-//     }
-//     if(!isSorted(E, 0, E.size()))
-//     {
-//         std::cout << "E:" << std::endl;
-
-//         vector<int> Z = E;
-//         std::cout << "ORIGINAL: ";
-//         printVector(Z);
-
-//         bubbleSort(Z);
-//         std::cout << "BUBBLE: ";
-//         printVector(Z);
-
-//         Z = E;
-//         insertionSort(Z);
-//         std::cout << "INSERTION: ";
-//         printVector(Z);
-
-//         Z = E;
-//         selecionSort(Z);
-//         std::cout << "SELECTION: ";
-//         printVector(Z);
-        
-//         Z = E;
-//         quickSort(Z);
-//         std::cout << "QUICK: ";
-//         printVector(Z);
-//     }
-//     if(!isSorted(F, 0, F.size()))
-//     {
-//         std::cout << "F:" << std::endl;
-
-//         vector<int> Z = F;
-//         std::cout << "ORIGINAL: ";
-//         printVector(Z);
-
-//         bubbleSort(Z);
-//         std::cout << "BUBBLE: ";
-//         printVector(Z);
-
-//         Z = F;
-//         insertionSort(Z);
-//         std::cout << "INSERTION: ";
-//         printVector(Z);
-
-//         Z = F;
-//         selecionSort(Z);
-//         std::cout << "SELECTION: ";
-//         printVector(Z);
-        
-//         Z = F;
-//         quickSort(Z);
-//         std::cout << "QUICK: ";
-//         printVector(Z);
-//     }
-// }
-
-
-void runOne(const std::string& name, const std::vector<int>& input)
+void runSorts(const std::string& name, const std::vector<int>& v)
 {
-    auto checkSort = [&](const std::string& algName, auto sorter) {
-        std::vector<int> z = input;
+    std::cout << name << ": " << v.size() << " elements" << std::endl;
 
-        sorter(z);
+    std::vector<int> Z;
 
-        if (!isSorted(z, 0, z.size())) { // adjust if your isSorted uses inclusive end
-            std::cout << name << " FAILED " << algName << "\n";
-            std::cout << "ORIGINAL: "; printVector(input);
-            std::cout << "RESULT:   "; printVector(z);
-        }
-    };
+    Z = v;
+    std::cout << "ORIGINAL  - " << Z.size() << ": ";
+    printVector(Z);
 
-    checkSort("BUBBLE",    [](auto& v){ bubbleSort(v); });
-    checkSort("INSERTION", [](auto& v){ insertionSort(v); });
-    checkSort("SELECTION", [](auto& v){ selecionSort(v); });
-    checkSort("QUICK",     [](auto& v){ quickSort(v); });
+    Z = v;
+    bubbleSort(Z);
+    std::cout << "BUBBLE    - " << Z.size() << ": ";
+    printVector(Z);
+    std::cout << "  sorted? " << (isSorted(Z, 0, Z.size() - 1) ? "YES" : "NO") << std::endl;
+
+    Z = v;
+    insertionSort(Z);
+    std::cout << "INSERTION - " << Z.size() << ": ";
+    printVector(Z);
+    std::cout << "  sorted? " << (isSorted(Z, 0, Z.size() - 1) ? "YES" : "NO") << std::endl;
+
+    Z = v;
+    selecionSort(Z);
+    std::cout << "SELECTION - " << Z.size() << ": ";
+    printVector(Z);  
+    std::cout << "  sorted? " << (isSorted(Z, 0, Z.size() - 1) ? "YES" : "NO") << std::endl;
+
+    Z = v;
+    quickSort(Z);
+    std::cout << "QUICK     - " << Z.size() << ": ";
+    printVector(Z);
+    std::cout << "  sorted? " << (isSorted(Z, 0, Z.size() - 1) ? "YES" : "NO") << std::endl;
 }
 
-void test()
+void personalTest(const vector<int> &v)
 {
-    runOne("A", {8,6,3,10,9,1,14,15,7});
-    runOne("B", {14, 7, 5, 3, 9, 6, 1, 13, 55, 9, 0});
-    runOne("C", {1,2,3,4,5,6,7,8,9});
-    runOne("D", {20,19,18,17,16,15,14,13});
-    runOne("E", {1});
-    runOne("F", {});
+    runSorts("A", v);
 }
 
+
+
+/******************************************************************************
+* Generate a vector of random integers in a given range. The ends *
+* of this range are inclusive. *
+* size - int - the number of integers in the resulting vector *
+* low, high - int - the range from which to draw random integers (inclusive) *
+* return - vector<int> - a vector of random integers *
+******************************************************************************/
+vector<int> randomVector(int size, int low, int high)
+{
+    vector<int> v(size, 0);
+    for (int i = 0; i < size; i++)
+    {
+        v[i] = rand() % (high - low +1) + low;
+    }
+    return v;
+}
+
+/******************************************************************
+* Calculate the sample standard deviation of a vector of doubles *
+* v - const vector<double> - a vector of doubles *
+* return - double - the sample standard deviation of v *
+******************************************************************/
+double sampleSD(const vector<double> v)
+{
+    double mean = 0;
+    for (int i = 0; i < v.size(); i++)
+    {
+        mean += v[i];
+    }
+    mean = mean / v.size();
+    double sd = 0;
+    for (int i = 0; i < v.size(); i++)
+    {
+        sd += (v[i]-mean)*(v[i]-mean);
+    }
+    sd = sd / (v.size()-1);
+    return sqrt(sd);
+}
+
+double timeSort(vector<int> &v, std::vector<int> (*sortFunc)(std::vector<int>&))
+{
+    chrono::high_resolution_clock::time_point start;
+    chrono::high_resolution_clock::time_point end;
+    start = chrono::high_resolution_clock::now();
+    vector<int> Z = v;
+    Z = sortFunc(Z);
+    end = chrono::high_resolution_clock::now();
+    double elapsed = chrono::duration_cast<chrono::duration<double>>(end - start).count();
+    std::cout << (isSorted(Z, 0, Z.size() - 1) ? "Sorting successful" : "Sorting failed");
+    //printVector(Z);
+    cout << "\nElapsed time: " << elapsed << endl;
+    return elapsed;
+}
+
+void classTest(std::string sortName, vector<int> &v, std::vector<int> (*sortFunc)(std::vector<int>&))
+{
+    std::cout << "*************************" << std::endl;
+    std::cout << sortName << " sort on 10 vectors of length 100" << std::endl;
+
+    vector<double> runTimes;
+    runTimes.push_back(timeSort(v, sortFunc));
+
+    std::cout << std::endl;
+    std::cout << "*************************\n" << std::endl;
+}
 
 int main()
 {
-    test();
+    std::ofstream file("timings.csv");
+    file << "n,bubble_ms,insertion_ms,selection_ms,quick_ms";
+
+    srand(time(NULL));
+
+    vector<vector<int>> List;
+
+    for(int i = 0; i < 10; i++)
+    {
+        List.push_back(randomVector(100, -1000, 1000));
+        //personalTest(List[i]);
+    }
+
+    for(int a = 0; a < 4; a++)
+    {
+        for(int b = 0; b < List.size(); b++)
+        {
+            switch(a)
+            {
+                case 0:
+                    //printVector(List[b]);
+                    classTest("Bubble", List[b], bubbleSort);
+                    break;
+                case 1:
+                    classTest("Insertion", List[b], insertionSort);
+                    break;
+                case 2:
+                    classTest("Selection", List[b], selecionSort);
+                    break;
+                case 3:
+                    classTest("Quick", List[b], quickSort);
+                    break;
+            }
+        }
+    }
+
+    file.close();
 
     return 0;
-}
+};
