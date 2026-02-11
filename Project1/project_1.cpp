@@ -244,16 +244,15 @@ double timeSort(vector<int> &v, std::vector<int> (*sortFunc)(std::vector<int>&))
     return elapsed;
 }
 
-void classTest(vector<int> &v, std::vector<int> (*sortFunc)(std::vector<int>&))
-{
-    vector<double> runTimes;
-    runTimes.push_back(timeSort(v, sortFunc));
-}
+// void classTest(vector<int> &v, std::vector<int> (*sortFunc)(std::vector<int>&))
+// {
+//     vector<double> runTimes;
+//     runTimes.push_back(timeSort(v, sortFunc));
+// }
 
 int main()
 {
     std::ofstream file("timings.csv");
-    file << "n,bubble_ms,insertion_ms,selection_ms,quick_ms";
 
     srand(time(NULL));
 
@@ -269,7 +268,8 @@ int main()
     std::cout << "Bubble sort on 10 vectors of length " << List[0].size() << std::endl;
     for(int a = 0; a < List.size(); a++)
     {
-        classTest(List[a], bubbleSort);
+        double bubble = timeSort(List[a], bubbleSort);
+        file << "Bubble" << ", " << List[a].size() << ", " << bubble << std::endl;
     }
     std::cout << std::endl;
     std::cout << "*************************\n" << std::endl;
@@ -278,7 +278,8 @@ int main()
     std::cout << "Insertion sort on 10 vectors of length " << List[0].size() << std::endl;
     for(int a = 0; a < List.size(); a++)
     {
-        classTest(List[a], insertionSort);
+        double insertion = timeSort(List[a], insertionSort);
+        file << "Insertion" << ", " << List[a].size() << ", " << insertion << std::endl;
     }
     std::cout << std::endl;
     std::cout << "*************************\n" << std::endl;
@@ -287,7 +288,8 @@ int main()
     std::cout << "Selection sort on 10 vectors of length " << List[0].size() << std::endl;
     for(int a = 0; a < List.size(); a++)
     {
-        classTest(List[a], selecionSort);
+        double selection = timeSort(List[a], selecionSort);
+        file << "Selection" << ", " << List[a].size() << ", " << selection << std::endl;
     }
     std::cout << std::endl;
     std::cout << "*************************\n" << std::endl;
@@ -296,7 +298,8 @@ int main()
     std::cout << "Quick sort on 10 vectors of length " << List[0].size() << std::endl;
     for(int a = 0; a < List.size(); a++)
     {
-        classTest(List[a], quickSort);
+        double quick = timeSort(List[a], quickSort);
+        file << "Quick" << ", " << List[a].size() << ", " << quick << std::endl;
     }
     std::cout << std::endl;
     std::cout << "*************************\n" << std::endl;
