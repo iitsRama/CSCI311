@@ -373,20 +373,20 @@ int main()
     //std::vector<int> (*sortFunc)(std::vector<int>&)
 
     runTests(best, startSize, endSize, startValue, endValue, amount, bestFile, bubbleSort, "Bubble", 'b');
-    runTests(average, startSize, endSize, startValue, endValue, amount, bestFile, bubbleSort, "Bubble", 'a');
-    runTests(worst, startSize, endSize, startValue, endValue, amount, bestFile, bubbleSort, "Bubble", 'w');
+    runTests(average, startSize, endSize, startValue, endValue, amount, averageFile, bubbleSort, "Bubble", 'a');
+    runTests(worst, startSize, endSize, startValue, endValue, amount, worstFile, bubbleSort, "Bubble", 'w');
 
     runTests(best, startSize, endSize, startValue, endValue, amount, bestFile, insertionSort, "Insertion", 'b');
-    runTests(average, startSize, endSize, startValue, endValue, amount, bestFile, insertionSort, "Insertion", 'a');
-    runTests(worst, startSize, endSize, startValue, endValue, amount, bestFile, insertionSort, "Insertion", 'w');
+    runTests(average, startSize, endSize, startValue, endValue, amount, averageFile, insertionSort, "Insertion", 'a');
+    runTests(worst, startSize, endSize, startValue, endValue, amount, worstFile, insertionSort, "Insertion", 'w');
 
     runTests(best, startSize, endSize, startValue, endValue, amount, bestFile, selectionSort, "Selection", 'b');
-    runTests(average, startSize, endSize, startValue, endValue, amount, bestFile, selectionSort, "Selection", 'a');
-    runTests(worst, startSize, endSize, startValue, endValue, amount, bestFile, selectionSort, "Selection", 'w');
+    runTests(average, startSize, endSize, startValue, endValue, amount, averageFile, selectionSort, "Selection", 'a');
+    runTests(worst, startSize, endSize, startValue, endValue, amount, worstFile, selectionSort, "Selection", 'w');
 
     runTests(best, startSize, endSize, startValue, endValue, amount, bestFile, quickSort, "Quick", 'b');
-    runTests(average, startSize, endSize, startValue, endValue, amount, bestFile, quickSort, "Quick", 'a');
-    runTests(worst, startSize, endSize, startValue, endValue, amount, bestFile, quickSort, "Quick", 'w');
+    runTests(average, startSize, endSize, startValue, endValue, amount, averageFile, quickSort, "Quick", 'a');
+    runTests(worst, startSize, endSize, startValue, endValue, amount, worstFile, quickSort, "Quick", 'w');
 
     worstFile.close();
     averageFile.close();
