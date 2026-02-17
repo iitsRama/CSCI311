@@ -142,22 +142,22 @@ void bestQuickSort(vector<int> &v)
     }
 }
 
-void printVector(const vector<int> &v)
-{
-    std:: cout << v.size() << std::endl;
-    std::cout << "{";
+// void printVector(const vector<int> &v)
+// {
+//     std:: cout << v.size() << std::endl;
+//     std::cout << "{";
 
-    if(v.size() == 0)
-    {
-        std::cout << "}" << std::endl;
-        return;
-    }
-    for(int i = 0; i < v.size() - 1; i++)
-    {
-        std::cout << v[i] << ", ";
-    }
-    std::cout << v[v.size() - 1] << "}" << std::endl;
-}
+//     if(v.size() == 0)
+//     {
+//         std::cout << "}" << std::endl;
+//         return;
+//     }
+//     for(int i = 0; i < v.size() - 1; i++)
+//     {
+//         std::cout << v[i] << ", ";
+//     }
+//     std::cout << v[v.size() - 1] << "}" << std::endl;
+// }
 
 /******************************************************************
 * Calculate the sample standard deviation of a vector of doubles *
@@ -269,7 +269,7 @@ void printVector(std::string sortName, vector<vector<int>> list, void (*sortFunc
     for(int i = 0; i < list.size(); i++)
     {
 
-        printVector(list[i]);
+        //printVector(list[i]);
         double timeValue = timeSort(list[i], sortFunc);
         timeValues.push_back(timeValue);
         sorted = sorted && isSorted(list[i]);
@@ -315,11 +315,10 @@ vector<vector<int>> sortedVector(int size, int low, int high, int amount)
 
     for(int i = 0; i < amount; i++)
     {
-        int random = rand() % (high - low + 1) + low;
+         int start = low + (size - 1) + rand() % (high - low - (size - 1) + 1);
         for(int j = 0; j < size; j++)
         {
-            v[j] = random;
-            random++;
+            v[j] = start + j;
         }
         list.push_back(v);
     }
@@ -334,11 +333,10 @@ vector<vector<int>> reverseSortedVector(int size, int low, int high, int amount)
 
     for(int i = 0; i < amount; i++)
     {
-        int random = rand() % (high - low + 1) + low;
+        int start = low + rand() % (high - low - (size - 1) + 1);
         for(int j = 0; j < size; j++)
         {
-            v[j] = random;
-            random--;
+            v[j] = start - j;
         }
         list.push_back(v);
     }
@@ -389,7 +387,7 @@ vector<vector<int>> worstSelectionVector(int size, int low, int high, int amount
 void runTests(vector<vector<int>> &v, int low, int high, int amount, std::ofstream &file,
                 void (*sortFunc)(std::vector<int>&), std::string sortName, char caseName)
 {
-    std::vector<int> sizes = {10, 100, 1000};//, 5000, 10000};
+    std::vector<int> sizes = {10, 100, 1000, 5000, 10000};
 
     for(int i = 0; i < sizes.size(); i++)
     {
@@ -453,29 +451,30 @@ int main()
 
     int low = 0;
     int high = 100000 + rand() % (250000 - 100000 + 1);
-    int amount = 10;
+    int amount = 50;
 
-    // runTests(v, low, high, 10, bubbleSort, "Bubble", 'a');
-    // runTests(v, low, high, 10, insertionSort, "Insertion", 'a');
-    // runTests(v, low, high, 10, selectionSort, "Selection", 'a');
-    // runTests(v, low, high, 10, quickSort, "Quick", 'a');
-    runTests(v, low, high, 10, selectionSort, "Selection", 's');
+    //runTests(v, low, high, 10, selectionSort, "Selection", 's');
 
-    // runTests(v, low, high, amount, bestFile, bubbleSort, "Bubble", 'b');
-    // runTests(v, low, high, amount, averageFile, bubbleSort, "Bubble", 'a');
-    // runTests(v, low, high, amount, worstFile, bubbleSort, "Bubble", 'w');
+    runTests(v, low, high, 10, bubbleSort, "Bubble", 'a');
+    runTests(v, low, high, 10, insertionSort, "Insertion", 'a');
+    runTests(v, low, high, 10, selectionSort, "Selection", 'a');
+    runTests(v, low, high, 10, quickSort, "Quick", 'a');
 
-    // runTests(v, low, high, amount, bestFile, insertionSort, "Insertion", 'b');
-    // runTests(v, low, high, amount, averageFile, insertionSort, "Insertion", 'a');
-    // runTests(v, low, high, amount, worstFile, insertionSort, "Insertion", 'w');
+    runTests(v, low, high, amount, bestFile, bubbleSort, "Bubble", 'b');
+    runTests(v, low, high, amount, averageFile, bubbleSort, "Bubble", 'a');
+    runTests(v, low, high, amount, worstFile, bubbleSort, "Bubble", 'w');
 
-    // runTests(v, low, high, amount, bestFile, selectionSort, "Selection", 'b');
-    // runTests(v, low, high, amount, averageFile, selectionSort, "Selection", 'a');
-    // runTests(v, low, high, amount, worstFile, selectionSort, "Selection", 's');
+    runTests(v, low, high, amount, bestFile, insertionSort, "Insertion", 'b');
+    runTests(v, low, high, amount, averageFile, insertionSort, "Insertion", 'a');
+    runTests(v, low, high, amount, worstFile, insertionSort, "Insertion", 'w');
 
-    // runTests(v, low, high, amount, bestFile, bestQuickSort, "Quick", 'b');
-    // runTests(v, low, high, amount, averageFile, quickSort, "Quick", 'a');
-    // runTests(v, low, high, amount, worstFile, quickSort, "Quick", 'w');
+    runTests(v, low, high, amount, bestFile, selectionSort, "Selection", 'b');
+    runTests(v, low, high, amount, averageFile, selectionSort, "Selection", 'a');
+    runTests(v, low, high, amount, worstFile, selectionSort, "Selection", 's');
+
+    runTests(v, low, high, amount, bestFile, bestQuickSort, "Quick", 'b');
+    runTests(v, low, high, amount, averageFile, quickSort, "Quick", 'a');
+    runTests(v, low, high, amount, worstFile, quickSort, "Quick", 'w');
 
     worstFile.close();
     averageFile.close();
