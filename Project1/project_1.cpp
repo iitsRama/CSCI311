@@ -84,8 +84,8 @@ void quickSort(vector<int> &v)
     if (v.size() < 2) { return; }
 
     int pivot = v[0];
-    vector<int> A = {};
-    vector<int> B = {};
+    vector<int> A;
+    vector<int> B;
 
     for(int i = 1; i < v.size(); i++)
     {
@@ -115,11 +115,12 @@ void bestQuickSort(vector<int> &v)
     if (v.size() < 2) { return; }
 
     int pivot = v[v.size() / 2];
-    vector<int> A = {};
-    vector<int> B = {};
+    vector<int> A;
+    vector<int> B;
 
-    for(int i = 1; i < v.size(); i++)
+    for(int i = 0; i < v.size(); i++)
     {
+        if(v[i] == pivot) { continue; };
         if(v[i] <= pivot)
         {
             A.push_back(v[i]);
@@ -130,8 +131,8 @@ void bestQuickSort(vector<int> &v)
         }
     }
 
-    quickSort(A);
-    quickSort(B);
+    bestQuickSort(A);
+    bestQuickSort(B);
 
     v = A;
     v.push_back(pivot);
@@ -236,6 +237,33 @@ void printVector(std::string sortName, vector<vector<int>> list, std::ofstream &
     vector<double> timeOutliers;
     bool sorted = true;
 
+    // std::cout << "*************************" << std::endl;
+    // std::cout << sortName << " sort on " << list.size() << " vectors of length " << list[0].size() << std::endl;
+    for(int i = 0; i < list.size(); i++)
+    {
+
+        // printVector(list[i]);
+        double timeValue = timeSort(list[i], sortFunc);
+        timeValues.push_back(timeValue);
+        file << sortName << "," << list[i].size() << "," << timeValue << std::endl;
+        sorted = sorted && isSorted(list[i]);
+    }
+
+    // (sorted) ? std::cout << "Sorting successful\n" : std::cout <<  "Sorting failed\n";
+    
+    timeOutliers = calculateTime(timeValues);
+
+    // std::cout << "Minimum: " << timeOutliers[0] << "; Mean: " << timeOutliers[1] << "; Standard Deviation: " << timeOutliers[2] << "; Maximum: " << timeOutliers[3] << std::endl;
+    // std::cout << std::endl;
+    // std::cout << "*************************\n" << std::endl;
+}
+
+void printVector(std::string sortName, vector<vector<int>> list, void (*sortFunc)(std::vector<int>&))
+{
+    vector<double> timeValues;
+    vector<double> timeOutliers;
+    bool sorted = true;
+
     std::cout << "*************************" << std::endl;
     std::cout << sortName << " sort on " << list.size() << " vectors of length " << list[0].size() << std::endl;
     for(int i = 0; i < list.size(); i++)
@@ -244,7 +272,6 @@ void printVector(std::string sortName, vector<vector<int>> list, std::ofstream &
         // printVector(list[i]);
         double timeValue = timeSort(list[i], sortFunc);
         timeValues.push_back(timeValue);
-        file << sortName << ", " << list[i].size() << ", " << timeValue << std::endl;
         sorted = sorted && isSorted(list[i]);
     }
 
@@ -319,39 +346,57 @@ vector<vector<int>> reverseSortedVector(int size, int low, int high, int amount)
     return list;
 }
 
-void runTests(vector<vector<int>> &v, int startSize, int endSize, int startValue, int endValue, int amount, std::ofstream &file,
-     void (*sortFunc)(std::vector<int>&), std::string sortName, char caseName)
+vector<vector<int>> worstSelectionVector(int size, int low, int high, int amount, int difference)
 {
-    for(int i = startSize; i <= endSize; i *= 10)
+    vector<vector<int>> list;
+    vector<int> v(size);
+    for(int i = 0; i < amount; i++)
     {
-        int median = endValue / 2;
-        int difference = endValue / i;
+        int number = 0;
+
+        for(int j = 0; j < size / 2; j++)
+        {
+            v[j] = number;
+            number += difference;
+        }
+        number = high - 1;
+        for(int j = size / 2; j < size; j++)
+        {
+            v[j] = number;
+            number -= difference;
+        }
+
+        list.push_back(v);
+    }
+
+    return list;
+}
+
+void runTests(vector<vector<int>> &v, int startValue, int endValue, int amount, std::ofstream &file,
+                void (*sortFunc)(std::vector<int>&), std::string sortName, char caseName)
+{
+    std::vector<int> sizes = {10, 100, 1000, 5000, 10000};
+
+    for(int i = 0; i < sizes.size(); i++)
+    {
+        int medianIndex = endValue / 2;
+        int stop = sizes[i] / 4;
+        int difference = endValue / sizes[i];
         int increment = 0;
+
         switch(caseName)
         {
             case 'b':
-                v = sortedVector(i, startValue, endValue, amount);
+                v = sortedVector(sizes[i], startValue, endValue, amount);
                 break;
             case 'a':
-                v = randomVector(i, startValue, endValue, amount);
+                v = randomVector(sizes[i], startValue, endValue, amount);
                 break;
             case 'w':
-                v = reverseSortedVector(i, startValue, endValue, amount);
+                v = reverseSortedVector(sizes[i], startValue, endValue, amount);
                 break;
             case 's':
-                if(difference % 2 == 0)
-                {
-                    v[increment].push_back(difference);
-                    difference += difference;
-                    increment++;
-                }
-                else
-                {
-
-                }
-                break;
-            case 'q':
-
+                v = worstSelectionVector(sizes[i], startValue, endValue, amount, difference);
                 break;
             default:
                 return;
@@ -360,43 +405,54 @@ void runTests(vector<vector<int>> &v, int startSize, int endSize, int startValue
     }
 }
 
+void runTests(vector<vector<int>> &v, int startValue, int endValue, int amount,
+                void (*sortFunc)(std::vector<int>&), std::string sortName, char caseName)
+{
+    int size = 100;
+
+    v = randomVector(size, startValue, endValue, amount);
+
+    printVector(sortName, v, sortFunc);
+}
+
 int main()
 {
-    std::ofstream worstFile("worst.csv");
-    std::ofstream averageFile("average.csv");
-    std::ofstream bestFile("best.csv");
+    std::ofstream worstFile("data/worst.csv");
+    std::ofstream averageFile("data/average.csv");
+    std::ofstream bestFile("data/best.csv");
 
     srand(time(NULL));
 
-    vector<vector<int>> average;
-    vector<vector<int>> best;
-    vector<vector<int>> worst;
-    vector<vector<int>> bestQuick;
-    vector<vector<int>> worstSelection;
+    vector<vector<int>> v;
 
     int startSize = 10;
-    int endSize = 1000;
+    int endSize = 10000;
     int startValue = 0;
     int endValue = 1000000;
-    int amount = 50;
+    int amount = 10;
 
     //std::vector<int> (*sortFunc)(std::vector<int>&)
 
-    runTests(best, startSize, endSize, startValue, endValue, amount, bestFile, bubbleSort, "Bubble", 'b');
-    runTests(average, startSize, endSize, startValue, endValue, amount, averageFile, bubbleSort, "Bubble", 'a');
-    runTests(worst, startSize, endSize, startValue, endValue, amount, worstFile, bubbleSort, "Bubble", 'w');
+    runTests(v, startValue, endValue, 10, bubbleSort, "Bubble", 'a');
+    runTests(v, startValue, endValue, 10, insertionSort, "Insertion", 'a');
+    runTests(v, startValue, endValue, 10, selectionSort, "Selection", 'a');
+    runTests(v, startValue, endValue, 10, quickSort, "Quick", 'a');
 
-    runTests(best, startSize, endSize, startValue, endValue, amount, bestFile, insertionSort, "Insertion", 'b');
-    runTests(average, startSize, endSize, startValue, endValue, amount, averageFile, insertionSort, "Insertion", 'a');
-    runTests(worst, startSize, endSize, startValue, endValue, amount, worstFile, insertionSort, "Insertion", 'w');
+    runTests(v, startValue, endValue, amount, bestFile, bubbleSort, "Bubble", 'b');
+    runTests(v, startValue, endValue, amount, averageFile, bubbleSort, "Bubble", 'a');
+    runTests(v, startValue, endValue, amount, worstFile, bubbleSort, "Bubble", 'w');
 
-    runTests(best, startSize, endSize, startValue, endValue, amount, bestFile, selectionSort, "Selection", 'b');
-    runTests(average, startSize, endSize, startValue, endValue, amount, averageFile, selectionSort, "Selection", 'a');
-    runTests(worst, startSize, endSize, startValue, endValue, amount, worstFile, selectionSort, "Selection", 'w');
+    runTests(v, startValue, endValue, amount, bestFile, insertionSort, "Insertion", 'b');
+    runTests(v, startValue, endValue, amount, averageFile, insertionSort, "Insertion", 'a');
+    runTests(v, startValue, endValue, amount, worstFile, insertionSort, "Insertion", 'w');
 
-    runTests(best, startSize, endSize, startValue, endValue, amount, bestFile, quickSort, "Quick", 'b');
-    runTests(average, startSize, endSize, startValue, endValue, amount, averageFile, quickSort, "Quick", 'a');
-    runTests(worst, startSize, endSize, startValue, endValue, amount, worstFile, quickSort, "Quick", 'w');
+    runTests(v, startValue, endValue, amount, bestFile, selectionSort, "Selection", 'b');
+    runTests(v, startValue, endValue, amount, averageFile, selectionSort, "Selection", 'a');
+    runTests(v, startValue, endValue, amount, worstFile, selectionSort, "Selection", 's');
+
+    runTests(v, startValue, endValue, amount, bestFile, bestQuickSort, "Quick", 'b');
+    runTests(v, startValue, endValue, amount, averageFile, quickSort, "Quick", 'a');
+    runTests(v, startValue, endValue, amount, worstFile, quickSort, "Quick", 'w');
 
     worstFile.close();
     averageFile.close();
@@ -404,25 +460,3 @@ int main()
 
     return 0;
 };
-
-
-/*
-D: For the best case for quicksort, we need to have 50 x 5 = 250 vectors,
-and according to the quicksort algorithm (where we select the first
-element to be the pivot element), we need to make sure the first element
-of the vector is the median value of the whole vector, and then when you
-go to the next round, you also need to make sure the first element of the
-subvector is also the median value of that subvector, etc.
-
-E: For the worst case for selection sort, e.g., you need to generate a
-vector like this, {2,4,6,8,9,7,5,3,1}, to make sure every time the
-selection works you need to do both the scanning and data swapping.
-(ascending even numbers followed by descending odd numbers)
-
-In summary,
-A: 250 vectors that contain random numbers.
-B: 250 vectors that are already sorted.
-C: 250 vectors that are already reversely sorted.
-D: 250 special vectors, as described above.
-E: 250 special vectors, as described above.
-*/

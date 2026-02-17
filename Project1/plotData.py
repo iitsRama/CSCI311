@@ -24,7 +24,7 @@ if __name__=='__main__':
 
   #{algorithm} -> {size} -> [times]
   times = {'Bubble Sort':{}, 'Insertion Sort':{}, 'Selection Sort':{}, 'Quicksort':{}}
-  with open(args.data, 'r') as f:
+  with open('data/' + args.data, 'r') as f:
     for line in f:
       l = line.strip().split(',')
       func = ''
@@ -46,7 +46,7 @@ if __name__=='__main__':
   plt.xlabel('Size')
   plt.ylabel('Time (sec)')
   plt.legend(loc='upper left')
-  plt.savefig(args.save+'.png', bbox_inches='tight')
+  plt.savefig('graphs/' + args.save+'.png', bbox_inches='tight')
   plt.clf()
 
   plt.yscale('log')
@@ -59,5 +59,5 @@ if __name__=='__main__':
   plt.xlabel('Size')
   plt.ylabel('Time (sec)')
   plt.legend(loc='upper left')
-  plt.savefig('log_'+args.save+'.png', bbox_inches='tight')
+  plt.savefig('graphs/log_'+args.save+'.png', bbox_inches='tight')
   plt.clf()
