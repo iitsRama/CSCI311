@@ -8,6 +8,8 @@ using namespace std;
 
 bool isSorted(const vector<int> &v)
 {
+    if (v.size() < 2) { return true; }
+
     for (int i = 1; i < v.size(); i++)
     {
         if (v[i-1] > v[i])
@@ -18,9 +20,9 @@ bool isSorted(const vector<int> &v)
     return true;
 }
 
-vector<int> bubbleSort(vector<int> &v)
+void bubbleSort(vector<int> &v)
 {
-    if (v.size() < 2) { return v; }
+    if (v.size() < 2) { return; }
 
     vector<int> vCopy = v;
     bool sorted = false;
@@ -40,13 +42,11 @@ vector<int> bubbleSort(vector<int> &v)
             }
         }
     }
-
-    return v;
 }
 
-vector<int> insertionSort(vector<int> &v)
+void insertionSort(vector<int> &v)
 {
-    if (v.size() < 2) { return v; }
+    if (v.size() < 2) { return; }
 
     for(int i = 1; i < v.size(); i++)
     {
@@ -57,13 +57,11 @@ vector<int> insertionSort(vector<int> &v)
             v[j] = temp;
         }
     }
- 
-    return v;
 }
 
-vector<int> selectionSort(vector<int> &v)
+void selectionSort(vector<int> &v)
 {
-    if (v.size() < 2) { return v; }
+    if (v.size() < 2) { return; }
 
     for(int i = 0; i < v.size() - 1; i++)
     {
@@ -79,13 +77,11 @@ vector<int> selectionSort(vector<int> &v)
         v[i] = v[uMin];
         v[uMin] = temp;
     }
-
-    return v;
 }
 
-vector<int> quickSort(vector<int> &v)
+void quickSort(vector<int> &v)
 {
-    if (v.size() < 2) { return v; }
+    if (v.size() < 2) { return; }
 
     int pivot = v[0];
     vector<int> A = {};
@@ -103,8 +99,8 @@ vector<int> quickSort(vector<int> &v)
         }
     }
 
-    A = quickSort(A);
-    B = quickSort(B);
+    quickSort(A);
+    quickSort(B);
 
     v = A;
     v.push_back(pivot);
@@ -112,13 +108,11 @@ vector<int> quickSort(vector<int> &v)
     {
         v.push_back(B[j]);
     }
-
-    return v;
 }
 
-vector<int> bestQuickSort(vector<int> &v)
+void bestQuickSort(vector<int> &v)
 {
-    if (v.size() < 2) { return v; }
+    if (v.size() < 2) { return; }
 
     int pivot = v[v.size() / 2];
     vector<int> A = {};
@@ -136,8 +130,8 @@ vector<int> bestQuickSort(vector<int> &v)
         }
     }
 
-    A = quickSort(A);
-    B = quickSort(B);
+    quickSort(A);
+    quickSort(B);
 
     v = A;
     v.push_back(pivot);
@@ -145,8 +139,6 @@ vector<int> bestQuickSort(vector<int> &v)
     {
         v.push_back(B[j]);
     }
-
-    return v;
 }
 
 // void printVector(const vector<int> &v)
@@ -188,13 +180,13 @@ double sampleSD(const vector<double> &v)
     return sqrt(sd);
 }
 
-double timeSort(vector<int> &v, std::vector<int> (*sortFunc)(std::vector<int>&))
+double timeSort(vector<int> &v, void (*sortFunc)(std::vector<int>&))
 {
     chrono::high_resolution_clock::time_point start;
     chrono::high_resolution_clock::time_point end;
 
     start = chrono::high_resolution_clock::now();
-    v = sortFunc(v);
+    sortFunc(v);
     end = chrono::high_resolution_clock::now();
 
     double elapsed = chrono::duration_cast<chrono::duration<double>>(end - start).count();
@@ -238,7 +230,7 @@ vector<double> calculateTime(const vector<double> &v)
 }
 
 // passing list by value makes a copy, lets me modify list all I want
-void printVector(std::string sortName, vector<vector<int>> list, std::ofstream &file, std::vector<int> (*sortFunc)(std::vector<int>&))
+void printVector(std::string sortName, vector<vector<int>> list, std::ofstream &file, void (*sortFunc)(std::vector<int>&))
 {
     vector<double> timeValues;
     vector<double> timeOutliers;
@@ -328,10 +320,13 @@ vector<vector<int>> reverseSortedVector(int size, int low, int high, int amount)
 }
 
 void runTests(vector<vector<int>> &v, int startSize, int endSize, int startValue, int endValue, int amount, std::ofstream &file,
-     std::vector<int> (*sortFunc)(std::vector<int>&), std::string sortName, char caseName)
+     void (*sortFunc)(std::vector<int>&), std::string sortName, char caseName)
 {
     for(int i = startSize; i <= endSize; i *= 10)
     {
+        int median = endValue / 2;
+        int difference = endValue / i;
+        int increment = 0;
         switch(caseName)
         {
             case 'b':
@@ -342,6 +337,21 @@ void runTests(vector<vector<int>> &v, int startSize, int endSize, int startValue
                 break;
             case 'w':
                 v = reverseSortedVector(i, startValue, endValue, amount);
+                break;
+            case 's':
+                if(difference % 2 == 0)
+                {
+                    v[increment].push_back(difference);
+                    difference += difference;
+                    increment++;
+                }
+                else
+                {
+
+                }
+                break;
+            case 'q':
+
                 break;
             default:
                 return;
@@ -365,8 +375,8 @@ int main()
     vector<vector<int>> worstSelection;
 
     int startSize = 10;
-    int endSize = 10000;
-    int startValue = -1000000;
+    int endSize = 1000;
+    int startValue = 0;
     int endValue = 1000000;
     int amount = 50;
 
