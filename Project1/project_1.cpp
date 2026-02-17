@@ -6,6 +6,7 @@ using namespace std;
 #include <chrono>
 #include <fstream>
 
+// Checks if passed vector is sorted in ascending order.
 bool isSorted(const vector<int> &v)
 {
     if (v.size() < 2) { return true; }
@@ -20,11 +21,12 @@ bool isSorted(const vector<int> &v)
     return true;
 }
 
+// Bubble sort, checks v[n-1] against v[n] for all n belonging to v.
 void bubbleSort(vector<int> &v)
 {
+    // size 1 or empty is always sorted
     if (v.size() < 2) { return; }
 
-    vector<int> vCopy = v;
     bool sorted = false;
 
     while(!sorted)
@@ -44,6 +46,7 @@ void bubbleSort(vector<int> &v)
     }
 }
 
+// Insertion sort, separates vector into 2 parts, sorted and unsorted part. Checks first value of unsorted against all sorted values, then inserts where proper.
 void insertionSort(vector<int> &v)
 {
     if (v.size() < 2) { return; }
@@ -59,6 +62,7 @@ void insertionSort(vector<int> &v)
     }
 }
 
+// Selection sort, works similarly to insertion sort, but 
 void selectionSort(vector<int> &v)
 {
     if (v.size() < 2) { return; }
@@ -79,6 +83,11 @@ void selectionSort(vector<int> &v)
     }
 }
 
+// Quick sort, a pivot point is chosen, the first element of the list here, and then sorts remaining values into two vectors:
+// Vector A is values less than or equal to that pivot value
+// Vector B is values greater than that pivot value
+// then Quick sort is recursively called on each of those vectors
+// Continues until A and B are sorted in ascending order, then our pivot value will be our median value, so we concotenate v = A + pivot + B.
 void quickSort(vector<int> &v)
 {
     if (v.size() < 2) { return; }
@@ -110,6 +119,8 @@ void quickSort(vector<int> &v)
     }
 }
 
+// Same as above quick sort, but our pivot value is the median value of the entire list, this code only works when the list is sorted in ascending order
+// Specifically to test the best case scenario of quick sort.
 void bestQuickSort(vector<int> &v)
 {
     if (v.size() < 2) { return; }
@@ -142,6 +153,7 @@ void bestQuickSort(vector<int> &v)
     }
 }
 
+// Prints out entire vector, used for debugging.
 // void printVector(const vector<int> &v)
 // {
 //     std:: cout << v.size() << std::endl;
@@ -181,6 +193,9 @@ double sampleSD(const vector<double> &v)
     return sqrt(sd);
 }
 
+// Measures time taken to sort a vector.
+// void (*sortFunc)(std::vector<int>&) is a function to a pointer which returns void and takes a reference to a vector of integers as an argument
+// This allows us to write just one timing function, and pass different sorting functions to it.
 double timeSort(vector<int> &v, void (*sortFunc)(std::vector<int>&))
 {
     chrono::high_resolution_clock::time_point start;
@@ -195,10 +210,9 @@ double timeSort(vector<int> &v, void (*sortFunc)(std::vector<int>&))
     return elapsed;
 }
 
+// Takes a vector of doubles, or time values, and returns the minimum, mean, standard deviation, and maximum values.
 vector<double> calculateTime(const vector<double> &v)
 {
-    // <Min, Mean, StdDev, Max
-
     vector<double> timeOutliers;
 
     double minimum = v[0];
@@ -231,7 +245,11 @@ vector<double> calculateTime(const vector<double> &v)
 }
 
 // passing list by value makes a copy, lets me modify list all I want
-void printVector(std::string sortName, vector<vector<int>> list, std::ofstream &file, void (*sortFunc)(std::vector<int>&))
+// Processes data and optionally prints, commented out as not the desired output from assignment, useful for debugging
+// sortName, file used to organize data in their respective .csv files
+// list is a vector of vectors
+// same function pointer as above, allows use of separate sorts.
+void processData(std::string sortName, vector<vector<int>> list, std::ofstream &file, void (*sortFunc)(std::vector<int>&))
 {
     vector<double> timeValues;
     vector<double> timeOutliers;
@@ -258,7 +276,8 @@ void printVector(std::string sortName, vector<vector<int>> list, std::ofstream &
     // std::cout << "*************************\n" << std::endl;
 }
 
-void printVector(std::string sortName, vector<vector<int>> list, void (*sortFunc)(std::vector<int>&))
+// Overloaded version of above function to accommodate base output to command line that assignment desires.
+void processData(std::string sortName, vector<vector<int>> list, void (*sortFunc)(std::vector<int>&))
 {
     vector<double> timeValues;
     vector<double> timeOutliers;
@@ -308,6 +327,7 @@ vector<vector<int>> randomVector(int size, int low, int high, int amount)
     return list;
 }
 
+// Generate a specified amount of ascending sorted vectors of size size, ranging from [low, high].
 vector<vector<int>> sortedVector(int size, int low, int high, int amount)
 {
     vector<vector<int>> list;
@@ -315,7 +335,8 @@ vector<vector<int>> sortedVector(int size, int low, int high, int amount)
 
     for(int i = 0; i < amount; i++)
     {
-         int start = low + (size - 1) + rand() % (high - low - (size - 1) + 1);
+        // start value equals low + size - 1 + random number from 
+        int start = low + (size - 1) + rand() % (high - low - (size - 1) + 1);
         for(int j = 0; j < size; j++)
         {
             v[j] = start + j;
@@ -326,6 +347,7 @@ vector<vector<int>> sortedVector(int size, int low, int high, int amount)
     return list;
 }
 
+// Generate a specified amount of descending sorted vectors of size size, ranging from [low, high]
 vector<vector<int>> reverseSortedVector(int size, int low, int high, int amount)
 {
     vector<vector<int>> list;
@@ -344,6 +366,9 @@ vector<vector<int>> reverseSortedVector(int size, int low, int high, int amount)
     return list;
 }
 
+// Generate a specified amount of vectors ranging from [low, high]
+// Special case for the worst case run time of selection sort
+// vector will be ascending even numbers until size / 2 is reached, then will swap to descending odd numbers for the remaining space
 vector<vector<int>> worstSelectionVector(int size, int low, int high, int amount)
 {
     vector<vector<int>> list;
@@ -384,6 +409,8 @@ vector<vector<int>> worstSelectionVector(int size, int low, int high, int amount
     return list;
 }
 
+// Main function call, will take a vector of vectors, the low and high values specified in main, the amount of vectors desired,
+// the file for which to write data, the sort function you wish to test, the name of that sort function, and a case name for switch case
 void runTests(vector<vector<int>> &v, int low, int high, int amount, std::ofstream &file,
                 void (*sortFunc)(std::vector<int>&), std::string sortName, char caseName)
 {
@@ -391,37 +418,36 @@ void runTests(vector<vector<int>> &v, int low, int high, int amount, std::ofstre
 
     for(int i = 0; i < sizes.size(); i++)
     {
-        int difference;
-        if(high < sizes[sizes.size() - 1])
-        {
-            difference = high / (high / 2);
-        }
-        else
-        {
-            difference = high / (sizes[i] / 2);
-        }
-
+        // For desired size, generate a vector according to the case name char passed
         switch(caseName)
         {
+            // Best case
             case 'b':
                 v = sortedVector(sizes[i], low, high, amount);
                 break;
+            // Average case
             case 'a':
                 v = randomVector(sizes[i], low, high, amount);
                 break;
+            // Worst case
             case 'w':
                 v = reverseSortedVector(sizes[i], low, high, amount);
                 break;
+            // Worst case for selection sort
             case 's':
                 v = worstSelectionVector(sizes[i], low, high, amount);
                 break;
             default:
                 return;
         }
-        printVector(sortName, v, file, sortFunc);
+        // Pass that vector and the previously passed sorting function to process data function, along with the name of the sort and the file.
+        processData(sortName, v, file, sortFunc);
     }
 }
 
+// Overloaded version of above function, allows us to pass the same arguments except for the file, so that we can output the base case to console
+// without writing to a file.
+// May change to write to a separate file.
 void runTests(vector<vector<int>> &v, int startValue, int endValue, int amount,
                 void (*sortFunc)(std::vector<int>&), std::string sortName, char caseName)
 {
@@ -436,7 +462,7 @@ void runTests(vector<vector<int>> &v, int startValue, int endValue, int amount,
         v = randomVector(size, startValue, endValue, amount);
     }
 
-    printVector(sortName, v, sortFunc);
+    processData(sortName, v, sortFunc);
 }
 
 int main()
