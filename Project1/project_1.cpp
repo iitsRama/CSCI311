@@ -387,7 +387,7 @@ vector<vector<int>> worstSelectionVector(int size, int low, int high, int amount
 void runTests(vector<vector<int>> &v, int low, int high, int amount, std::ofstream &file,
                 void (*sortFunc)(std::vector<int>&), std::string sortName, char caseName)
 {
-    std::vector<int> sizes = {10, 100, 1000, 5000, 10000};
+    std::vector<int> sizes = {100, 200, 400, 800, 1600, 3200, 6400, 12800};
 
     for(int i = 0; i < sizes.size(); i++)
     {
