@@ -99,7 +99,7 @@ void BST::insertValue(int val)
 
 std::shared_ptr<Node> BST::insertValue(std::shared_ptr<Node> n, int val)
 {
-  // Recursive base case, when below cases child node is == nullptr, create new node
+  // Recursive base case, when below cases child node is = nullptr, create new node with passed value
   if(n == nullptr) 
   {
     size++;
@@ -144,13 +144,13 @@ std::shared_ptr<Node> BST::deleteValue(std::shared_ptr<Node> n, int val)
   // If value found at node
   else if(val == n -> value)
   {
-    // Case 1: No children at node, return nullptr : above n->left or n->right = nullptr
+    // Case 1: No children at node, return nullptr : node = nullptr
     if(n -> left == nullptr && n -> right == nullptr)
     {
       size--;
       return nullptr;
     }
-    // Case 2: One child at node, return that child : above n->left or n->right = child that exists
+    // Case 2: One child at node, return that child : node = child that exists
     else if(n -> left == nullptr ^ n -> right == nullptr)
     {
       if(n -> left == nullptr)
@@ -164,7 +164,7 @@ std::shared_ptr<Node> BST::deleteValue(std::shared_ptr<Node> n, int val)
         return n -> left;
       }
     }
-    // Case 3: Two children at node, return minimum value of right subtree : above n->left or n->right = subtrees minimum
+    // Case 3: Two children at node, return minimum value of right subtree : node = subtrees minimum
     else
     {
       // Find min
