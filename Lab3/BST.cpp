@@ -1,5 +1,5 @@
 // Lab 3 - BST_skeleton.cpp - rename it to BST.cpp
-// Author: *** YOUR NAME HERE ***
+// Author: Amar Bulic 013040249
 
 #include<iostream>
 #include <vector>
@@ -14,12 +14,14 @@
 
 //ASSUME NO DUPLICATE VALUES
 
+// Contructor
 BST::BST()
 {
   root = nullptr;
   size = 0;
 }
 
+// Destructor
 BST::~BST(){}
 
 std::shared_ptr<Node> BST::search(int target)
@@ -27,11 +29,14 @@ std::shared_ptr<Node> BST::search(int target)
   return search(root, target);
 }
 
+// Find node containing target value, return node
 std::shared_ptr<Node> BST::search(std::shared_ptr<Node> n, int target)
 {
+  // Base case for recursive call
   if(n == nullptr) { return nullptr; }
 
   if(n -> value == target) { return n; }
+  // If val != target val, recursively comb through both left and right subtrees
   else
   {
     if(n -> value > target)
@@ -44,9 +49,11 @@ std::shared_ptr<Node> BST::search(std::shared_ptr<Node> n, int target)
     }
   }
 
+  // If not found return nullptr
   return nullptr;
 }
 
+// Find minimum value in tree
 std::shared_ptr<Node> BST::minimum()
 {
   return minimum(root);
@@ -56,6 +63,7 @@ std::shared_ptr<Node> BST::minimum(std::shared_ptr<Node> n)
 {
   if(n == nullptr) { return nullptr; }
 
+  // Follow left most path, bottom most left most child is minimum of BSTree
   while(n -> left != nullptr)
   {
     n = n -> left;
@@ -64,6 +72,7 @@ std::shared_ptr<Node> BST::minimum(std::shared_ptr<Node> n)
   return n;
 }
 
+// Find maximum value in tree
 std::shared_ptr<Node> BST::maximum()
 {
   return maximum(root);
@@ -73,6 +82,7 @@ std::shared_ptr<Node> BST::maximum(std::shared_ptr<Node> n)
 {
   if(n == nullptr) { return nullptr; }
 
+  // Follow right most path, bottom most right most child is maximum of BSTree
   while(n -> right != nullptr)
   {
     n = n -> right;
@@ -81,6 +91,7 @@ std::shared_ptr<Node> BST::maximum(std::shared_ptr<Node> n)
   return n;
 }
 
+// Insert desired value into tree
 void BST::insertValue(int val)
 {
   root = insertValue(root, val);
@@ -88,16 +99,19 @@ void BST::insertValue(int val)
 
 std::shared_ptr<Node> BST::insertValue(std::shared_ptr<Node> n, int val)
 {
+  // Recursive base case, when below cases child node is == nullptr, create new node
   if(n == nullptr) 
   {
     size++;
     return std::shared_ptr<Node>(new Node(val));
   }
 
+  // If val smaller than current nodes value, move to left child node
   if(val < n -> value)
   {
     n -> left = insertValue(n -> left, val);
   }
+  // If val larger than current nodes value, move to right child node
   if(val > n -> value)
   {
     n -> right = insertValue(n -> right, val);
@@ -106,6 +120,7 @@ std::shared_ptr<Node> BST::insertValue(std::shared_ptr<Node> n, int val)
   return n;
 }
 
+// Delete target value from tree
 void BST::deleteValue(int val)
 {
   root = deleteValue(root, val);
@@ -113,23 +128,29 @@ void BST::deleteValue(int val)
 
 std::shared_ptr<Node> BST::deleteValue(std::shared_ptr<Node> n, int val)
 {
+  // Recursive base case
   if(n == nullptr) { return nullptr; }
 
   if(val < n -> value)
   {
+    // Recursively check left subtree for value until value found at node
     n -> left = deleteValue(n -> left, val);
   }
   else if(val > n -> value)
   {
+    // Recursively check right subtree for value until value found at node
     n -> right = deleteValue(n -> right, val);
   }
+  // If value found at node
   else if(val == n -> value)
   {
+    // Case 1: No children at node, return nullptr : above n->left or n->right = nullptr
     if(n -> left == nullptr && n -> right == nullptr)
     {
       size--;
       return nullptr;
     }
+    // Case 2: One child at node, return that child : above n->left or n->right = child that exists
     else if(n -> left == nullptr ^ n -> right == nullptr)
     {
       if(n -> left == nullptr)
@@ -143,12 +164,16 @@ std::shared_ptr<Node> BST::deleteValue(std::shared_ptr<Node> n, int val)
         return n -> left;
       }
     }
+    // Case 3: Two children at node, return minimum value of right subtree : above n->left or n->right = subtrees minimum
     else
     {
+      // Find min
       std::shared_ptr<Node> min = minimum(n -> right);
 
+      // Set found node.value = min
       n -> value = min -> value;
 
+      // Go back to min value node of right subtree and delete
       n -> right = deleteValue(n -> right, min -> value);
     }
   }
@@ -156,6 +181,7 @@ std::shared_ptr<Node> BST::deleteValue(std::shared_ptr<Node> n, int val)
   return n;
 }
 
+// Check if tree is BSTree
 bool BST::isBST(std::shared_ptr<Node> n)
 {
   return isBST(n, INT_MIN, INT_MAX);
@@ -165,11 +191,20 @@ bool BST::isBST(std::shared_ptr<Node> n, int low, int high)
 {
   if(n == nullptr) { return true; }
 
-  if(n -> value <= low || n -> value >= high) { return false; }
+  // If root node > low value or > high value is not BSTree
+  if(n -> value < low || n -> value > high) { return false; }
   
+  // Comb through left and right subtrees, if all cases pass return true
   return isBST(n -> left, low, n -> value) && isBST(n -> right, n -> value, high);
 }
 
+// Push tree into vector using pre order filing:
+// push back left most path
+// going back up that path, check if right subtree exists
+// if exists: push right child, then push left most path of that child
+// repeat until back to root
+// if right child exists push right
+// follow same path order: prioritize left most path, climb back up while looking for right child, push right child, push left most path
 void BST::preOrder(std::shared_ptr<Node> n, std::vector<std::shared_ptr<Node>> &order)
 {
   if(n != nullptr)
@@ -180,6 +215,16 @@ void BST::preOrder(std::shared_ptr<Node> n, std::vector<std::shared_ptr<Node>> &
   }
 }
 
+// Push tree into vector using in order filing:
+// If left child exists, follow left child to min tree value ("bottom left")
+// push min value
+// push parent
+// push right child
+// go back to parent
+// go to parent of parent
+// go to right child
+// follow to left most child
+// push left, push parent, push right, repeat
 void BST::inOrder(std::shared_ptr<Node> n, std::vector<std::shared_ptr<Node>> &order)
 {
   if(n != nullptr)
@@ -190,6 +235,10 @@ void BST::inOrder(std::shared_ptr<Node> n, std::vector<std::shared_ptr<Node>> &o
   }
 }
 
+// Push tree into vector using post order filing: 
+// follow until parent.left = min of tree, assuming right child has no subtree:
+// push left, push right, push parent
+// prioritize left > right > parent
 void BST::postOrder(std::shared_ptr<Node> n, std::vector<std::shared_ptr<Node>> &order)
 {
   if(n != nullptr)
