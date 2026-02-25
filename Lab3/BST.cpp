@@ -24,65 +24,51 @@ BST::~BST(){}
 
 std::shared_ptr<Node> BST::search(int target)
 {
-  std::shared_ptr<Node> copy = root;
-
-  if(copy == nullptr) { return nullptr; }
-  if(copy -> value == target) { return copy; }
-  else
-  {
-    return search(copy -> right, target);
-  }
-
-  return nullptr;
+  return search(root, target);
 }
 
 std::shared_ptr<Node> BST::search(std::shared_ptr<Node> n, int target)
 {
-  std::shared_ptr<Node> copy = n;
-
-  if(copy == nullptr) { return nullptr; }
-  if(copy -> value == target) { return copy; }
+  if(n == nullptr) { return nullptr; }
+  if(n -> value == target) { return n; }
   else
   {
-    if(copy -> value > target)
+    if(n -> value > target)
     {
-      return search(copy -> left, target);
+      return search(n -> left, target);
     }
-    if(copy -> value < target)
+    if(n -> value < target)
     {
-      return search(copy -> right, target);
+      return search(n -> right, target);
     }
   }
 
-  return copy;
+  return n;
 }
 
 std::shared_ptr<Node> BST::minimum()
 {
-  std::shared_ptr<Node> min = search(root, INT_MIN);
-
-  return min;
+  return search(root, INT_MIN);
 }
 
 std::shared_ptr<Node> BST::minimum(std::shared_ptr<Node> n)
 {
-  std::shared_ptr<Node> min = search(n, INT_MIN);
+  if(n = nullptr) { return nullptr; }
 
-  return min;
+  while(n -> left != nullptr)
+  {
+    
+  }
 }
 
 std::shared_ptr<Node> BST::maximum()
 {
-  std::shared_ptr<Node> max = search(root, INT_MAX);
-
-  return max;
+  return search(root, INT_MAX);
 }
 
 std::shared_ptr<Node> BST::maximum(std::shared_ptr<Node> n)
 {
-  std::shared_ptr<Node> max = search(n, INT_MAX);
-
-  return max;
+  return search(n, INT_MAX);
 }
 
 void BST::insertValue(int val)
@@ -127,19 +113,52 @@ std::shared_ptr<Node> BST::insertValue(std::shared_ptr<Node> n, int val)
 
 void BST::deleteValue(int val)
 {
-
+  deleteValue(root, val);
 }
 
 std::shared_ptr<Node> BST::deleteValue(std::shared_ptr<Node> n, int val)
 {
+  if(n == nullptr) { return nullptr; }
 
-  return nullptr;
+  std::shared_ptr<Node> destination = search(n, val);
+
+  if(destination == nullptr) { return n; }
+
+  if(destination -> left == nullptr && destination -> right == nullptr)
+  {
+    destination = nullptr;
+  }
+  else if(destination -> left == nullptr ^ destination -> right == nullptr)
+  {
+    if(destination -> left == nullptr)
+    {
+      destination = destination -> right;
+    }
+    else
+    {
+      destination = destination -> left;
+    }
+  }
+  else
+  {
+    std::shared_ptr<Node> min = minimum(destination -> right);
+
+    destination -> value = min -> value;
+
+    min = nullptr;
+  }
+
+  return n;
 }
 
 bool BST::isBST(std::shared_ptr<Node> n)
 {
+  if(n == nullptr) { return true; }
 
-  return false;
+  std::shared_ptr<Node> low = minimum(n);
+  std::shared_ptr<Node> high = maximum(n);
+
+  return isBST(n, low -> value, high -> value);
 }
 
 bool BST::isBST(std::shared_ptr<Node> n, int low, int high)
