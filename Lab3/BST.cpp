@@ -17,7 +17,7 @@
 BST::BST()
 {
   root = nullptr;
-  int size = 0;
+  size = 0;
 }
 
 BST::~BST(){}
@@ -30,6 +30,7 @@ std::shared_ptr<Node> BST::search(int target)
 std::shared_ptr<Node> BST::search(std::shared_ptr<Node> n, int target)
 {
   if(n == nullptr) { return nullptr; }
+
   if(n -> value == target) { return n; }
   else
   {
@@ -41,9 +42,11 @@ std::shared_ptr<Node> BST::search(std::shared_ptr<Node> n, int target)
     {
       return search(n -> right, target);
     }
+
+    return n;
   }
 
-  return n;
+  return nullptr;
 }
 
 std::shared_ptr<Node> BST::minimum()
@@ -53,12 +56,14 @@ std::shared_ptr<Node> BST::minimum()
 
 std::shared_ptr<Node> BST::minimum(std::shared_ptr<Node> n)
 {
-  if(n = nullptr) { return nullptr; }
+  if(n == nullptr) { return nullptr; }
 
   while(n -> left != nullptr)
   {
-    
+    n = n -> left;
   }
+
+  return n;
 }
 
 std::shared_ptr<Node> BST::maximum()
@@ -68,7 +73,14 @@ std::shared_ptr<Node> BST::maximum()
 
 std::shared_ptr<Node> BST::maximum(std::shared_ptr<Node> n)
 {
-  return search(n, INT_MAX);
+  if(n == nullptr) { return nullptr; }
+
+  while(n -> right != nullptr)
+  {
+    n = n -> right;
+  }
+
+  return n;
 }
 
 void BST::insertValue(int val)
