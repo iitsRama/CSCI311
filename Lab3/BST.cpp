@@ -42,8 +42,6 @@ std::shared_ptr<Node> BST::search(std::shared_ptr<Node> n, int target)
     {
       return search(n -> right, target);
     }
-
-    return n;
   }
 
   return nullptr;
@@ -51,7 +49,7 @@ std::shared_ptr<Node> BST::search(std::shared_ptr<Node> n, int target)
 
 std::shared_ptr<Node> BST::minimum()
 {
-  return search(root, INT_MIN);
+  return minimum(root);
 }
 
 std::shared_ptr<Node> BST::minimum(std::shared_ptr<Node> n)
@@ -68,7 +66,7 @@ std::shared_ptr<Node> BST::minimum(std::shared_ptr<Node> n)
 
 std::shared_ptr<Node> BST::maximum()
 {
-  return search(root, INT_MAX);
+  return maximum(root);
 }
 
 std::shared_ptr<Node> BST::maximum(std::shared_ptr<Node> n)
@@ -85,39 +83,24 @@ std::shared_ptr<Node> BST::maximum(std::shared_ptr<Node> n)
 
 void BST::insertValue(int val)
 {
-  if(root == nullptr) 
-  {
-    root = std::shared_ptr<Node>(new Node(val)); 
-  }
-  else
-  {
-    root = insertValue(root, val);
-  }
+  root = insertValue(root, val);
 }
 
 std::shared_ptr<Node> BST::insertValue(std::shared_ptr<Node> n, int val)
 {
+  if(n == nullptr) 
+  {
+    size++;
+    return std::shared_ptr<Node>(new Node(val));
+  }
+
   if(val < n -> value)
   {
-    if(n -> left != nullptr)
-    {
-      n -> left = insertValue(n -> left, val);
-    }
-    else
-    {
-      n -> left = std::shared_ptr<Node>(new Node(val));
-    }
+    n -> left = insertValue(n -> left, val);
   }
-  else if(val > n -> value)
+  if(val > n -> value)
   {
-    if(n -> right != nullptr)
-    {
-      n -> right = insertValue(n -> right, val);
-    }
-    else
-    {
-      n -> right = std::shared_ptr<Node>(new Node(val));
-    }
+    n -> right = insertValue(n -> right, val);
   }
 
   return n;
@@ -125,39 +108,49 @@ std::shared_ptr<Node> BST::insertValue(std::shared_ptr<Node> n, int val)
 
 void BST::deleteValue(int val)
 {
-  deleteValue(root, val);
+  root = deleteValue(root, val);
 }
 
 std::shared_ptr<Node> BST::deleteValue(std::shared_ptr<Node> n, int val)
 {
   if(n == nullptr) { return nullptr; }
 
-  std::shared_ptr<Node> destination = search(n, val);
-
-  if(destination == nullptr) { return n; }
-
-  if(destination -> left == nullptr && destination -> right == nullptr)
+  if(val < n -> value)
   {
-    destination = nullptr;
+    n -> left = deleteValue(n -> left, val);
   }
-  else if(destination -> left == nullptr ^ destination -> right == nullptr)
+  else if(val > n -> value)
   {
-    if(destination -> left == nullptr)
+    n -> right = deleteValue(n -> right, val);
+  }
+  else if(val == n -> value)
+  {
+    if(n -> left == nullptr && n -> right == nullptr)
     {
-      destination = destination -> right;
+      size--;
+      return nullptr;
+    }
+    else if(n -> left == nullptr ^ n -> right == nullptr)
+    {
+      if(n -> left == nullptr)
+      {
+        size--;
+        return n -> right;
+      }
+      else
+      {
+        size--;
+        return n -> left;
+      }
     }
     else
     {
-      destination = destination -> left;
+      std::shared_ptr<Node> min = minimum(n -> right);
+
+      n -> value = min -> value;
+
+      n -> right = deleteValue(n -> right, min -> value);
     }
-  }
-  else
-  {
-    std::shared_ptr<Node> min = minimum(destination -> right);
-
-    destination -> value = min -> value;
-
-    min = nullptr;
   }
 
   return n;
@@ -165,19 +158,14 @@ std::shared_ptr<Node> BST::deleteValue(std::shared_ptr<Node> n, int val)
 
 bool BST::isBST(std::shared_ptr<Node> n)
 {
-  if(n == nullptr) { return true; }
-
-  std::shared_ptr<Node> low = minimum(n);
-  std::shared_ptr<Node> high = maximum(n);
-
-  return isBST(n, low -> value, high -> value);
+  return isBST(n, INT_MIN, INT_MAX);
 }
 
 bool BST::isBST(std::shared_ptr<Node> n, int low, int high)
 {
   if(n == nullptr) { return true; }
 
-  if(n -> value < low || n -> value > high) { return false; }
+  if(n -> value <= low || n -> value >= high) { return false; }
   
   return isBST(n -> left, low, n -> value) && isBST(n -> right, n -> value, high);
 }
@@ -186,7 +174,7 @@ void BST::preOrder(std::shared_ptr<Node> n, std::vector<std::shared_ptr<Node>> &
 {
   if(n != nullptr)
   {
-    std::cout << n -> value << std::endl;
+    order.push_back(n);
     preOrder(n -> left, order);
     preOrder(n -> right, order);
   }
@@ -197,7 +185,7 @@ void BST::inOrder(std::shared_ptr<Node> n, std::vector<std::shared_ptr<Node>> &o
   if(n != nullptr)
   {
     inOrder(n -> left, order);
-    std::cout << n -> value << std::endl;
+    order.push_back(n);
     inOrder(n -> right, order);
   }
 }
@@ -208,6 +196,6 @@ void BST::postOrder(std::shared_ptr<Node> n, std::vector<std::shared_ptr<Node>> 
   {
     postOrder(n -> left, order);
     postOrder(n -> right, order);
-    std::cout << n -> value << std::endl;
+    order.push_back(n);
   }
 }
