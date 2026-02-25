@@ -14,7 +14,7 @@
 
 //ASSUME NO DUPLICATE VALUES
 
-// Contructor
+// Constructor
 BST::BST()
 {
   root = nullptr;
@@ -191,7 +191,7 @@ bool BST::isBST(std::shared_ptr<Node> n, int low, int high)
 {
   if(n == nullptr) { return true; }
 
-  // If root node > low value or > high value is not BSTree
+  // If root node < low value or > high value is not BSTree
   if(n -> value < low || n -> value > high) { return false; }
   
   // Comb through left and right subtrees, if all cases pass return true
@@ -199,12 +199,10 @@ bool BST::isBST(std::shared_ptr<Node> n, int low, int high)
 }
 
 // Push tree into vector using pre order filing:
-// push back left most path
-// going back up that path, check if right subtree exists
-// if exists: push right child, then push left most path of that child
-// repeat until back to root
-// if right child exists push right
-// follow same path order: prioritize left most path, climb back up while looking for right child, push right child, push left most path
+// If left child exists, follow and push until min value node reached
+// Go back one level and check for right child
+// If exists: follow and push towards min node of subtree
+// Repeat
 void BST::preOrder(std::shared_ptr<Node> n, std::vector<std::shared_ptr<Node>> &order)
 {
   if(n != nullptr)
@@ -216,15 +214,9 @@ void BST::preOrder(std::shared_ptr<Node> n, std::vector<std::shared_ptr<Node>> &
 }
 
 // Push tree into vector using in order filing:
-// If left child exists, follow left child to min tree value ("bottom left")
-// push min value
-// push parent
-// push right child
-// go back to parent
-// go to parent of parent
-// go to right child
-// follow to left most child
-// push left, push parent, push right, repeat
+// Start at min node
+// Push min, push parent, go to min of right child if exists
+// Repeat
 void BST::inOrder(std::shared_ptr<Node> n, std::vector<std::shared_ptr<Node>> &order)
 {
   if(n != nullptr)
@@ -236,9 +228,9 @@ void BST::inOrder(std::shared_ptr<Node> n, std::vector<std::shared_ptr<Node>> &o
 }
 
 // Push tree into vector using post order filing: 
-// follow until parent.left = min of tree, assuming right child has no subtree:
-// push left, push right, push parent
-// prioritize left > right > parent
+// Start at min node
+// Push min, go to parent, push right if no subtree, push parent, go up to parent of parent
+// If right subtree exists follow steps on subtree
 void BST::postOrder(std::shared_ptr<Node> n, std::vector<std::shared_ptr<Node>> &order)
 {
   if(n != nullptr)
