@@ -37,3 +37,26 @@ Lab 4: Implement additional functions BSTree:
         4.) Delete - Delete value from tree
         5.) inOrder - In order traversal of tree, pushing values as function iterates
         6.) postOrder - Post order traversal of tree, pushing values as function iterates
+
+Project 1: Implement various sort algorithms, collect data in .csv files, plot data:
+
+        1.) Bubble sort
+        2.) Insertion sort
+        3.) Selection sort
+        4.) Quick sort
+
+        - Number of tests: 50 vectors each of size: 100, 200, 400, 800, 1600, 3200, 6400, 12800
+
+        - Graphs:
+
+                - Best: 
+                        
+                        /Project1/graphs/best_fig.png
+
+                - Average:
+
+                        /Project1/graphs/average_fig.png
+
+                - Worst: 
+
+                        /Project1/graphs/worst_fig.png
