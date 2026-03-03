@@ -51,12 +51,12 @@ Project 1: Implement various sort algorithms, collect data in .csv files, plot d
 
                 - Best case: 
                         
-                        ![Best case runtimes]([image-url](https://github.com/iitsRama/CSCI311/blob/main/Project1/graphs/best_fig.png))
+                        ![Best case runtimes]([image-url](graphs/best_fig.png))
 
                 - Average case:
 
-                        ![Average case runtimes]([image-url](https://github.com/iitsRama/CSCI311/blob/main/Project1/graphs/average_fig.png))
+                        ![Average case runtimes]([image-url](graphs/average_fig.png))
 
                 - Worst case: 
 
-                        ![Worst case runtimes]([image-url](https://github.com/iitsRama/CSCI311/blob/main/Project1/graphs/worst_fig.png))
+                        ![Worst case runtimes]([image-url](graphs/worst_fig.png))
