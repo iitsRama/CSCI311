@@ -52,10 +52,10 @@ Benchmark setup:
 
 ### Graphs
 **Best case**<br>
-![Best case runtimes](./Project1/graphs/best_fig.png) ![Best case Log runtimes](./Project1/graphs/best_log_fig.png)
+![Best case runtimes](./Project1/graphs/best_fig.png) ![Best case Log runtimes](./Project1/graphs/log_best_fig.png)
 
 **Average case**<br>
-![Average case runtimes](./Project1/graphs/average_fig.png) ![Average case Log runtimes](./Project1/graphs/average_log_fig.png)
+![Average case runtimes](./Project1/graphs/average_fig.png) ![Average case Log runtimes](./Project1/graphs/log_average_fig.png)
 
 **Worst case**<br>
-![Worst case runtimes](./Project1/graphs/worst_fig.png) ![Worst case Log runtimes](./Project1/graphs/worst_log_fig.png)
+![Worst case runtimes](./Project1/graphs/worst_fig.png) ![Worst case Log runtimes](./Project1/graphs/log_worst_fig.png)
