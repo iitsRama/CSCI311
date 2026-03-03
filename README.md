@@ -1,4 +1,4 @@
-# CSCI 311 – Labs & Projects
+# CSCI 311: Data Structures and Algorithms – Labs & Projects
 
 ## Lab 1: Intro / Refreshers
 Functions implemented:
