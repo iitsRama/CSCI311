@@ -1,62 +1,61 @@
-Lab 1: Implement various functions, acts as a refresher for the course. Functions include:
+# CSCI 311 – Labs & Projects
 
-        1.) Collatz length
-        2.) Print min, mean, max
-        3.) Calculate sum of all elements in a vector
-        4.) Remove values in vector greater than passed integer
-        5.) Find whether list b is a sublist of list a
-        6.) Check primality of passed integer
-        7.) Calculates sum of all prime numbers less than passed integer
-        8.) More efficient check primes function
-        9.) More efficient sum prime function
-        10.) Sieve of Eratosthenes
+## Lab 1: Intro / Refreshers
+Functions implemented:
+1. Collatz length
+2. Print min, mean, max
+3. Sum all elements in a vector
+4. Remove values greater than a passed integer
+5. Check whether list B is a sublist of list A
+6. Primality test
+7. Sum of all primes less than N
+8. More efficient primality test
+9. More efficient sum-of-primes
+10. Sieve of Eratosthenes
 
-Lab 2: Implement various recursive functions:        
+## Lab 2: Recursion
+Functions implemented:
+1. Number of points needed to construct a triangle with *n* dots
+2. *n*th Fibonacci number
+3. Sum all elements in a vector
+4. Find max value in a list
+5. Check if a list is sorted
+6. Check if a string is a palindrome
+7. Binary search
+8. Subset-sum (whether any subset sums to a target)
 
-        1.) Calculates number of points needeed to construct a triangle with n dots
-        2.) Calculate the nth number in the fibonnacci sequenece
-        3.) Caclulates the sum of all elements in a vector
-        4.) Finds max value in a list
-        5.) Checks if a list is sorted
-        6.) Checks if string is a palindrome
-        7.) Binary search through a list
-        8.) Check if a subset of vector will sum to passed integer
+## Lab 3: Binary Search Tree (BST)
+Functions implemented:
+1. `isBST` – validate BST property
+2. `search` – find node containing target value
+3. `insert` – insert value into tree
+4. `preOrder` – preorder traversal (push values into a vector)
 
-Lab 3: Implement basic functions of BSTree:
+## Lab 4: BST Continued
+Includes Lab 3 plus:
+1. `minimum` – find minimum value
+2. `maximum` – find maximum value
+3. `delete` – delete a value
+4. `inOrder` – inorder traversal (push values into a vector)
+5. `postOrder` – postorder traversal (push values into a vector)
 
-        1.) isBST - Check if tree is BSTree
-        2.) Search - Find node containing target value
-        3.) Insert - Insert value into tree appropriately
-        4.) preOrder - Traverse through tree using pre order, pushing values to a vector as function iterate
+## Project 1: Sorting Benchmark
+Algorithms:
+- Bubble sort
+- Insertion sort
+- Selection sort
+- Quicksort
 
-Lab 4: Implement additional functions BSTree:
+Benchmark setup:
+- 50 vectors per size
+- Sizes: 100, 200, 400, 800, 1600, 3200, 6400, 12800
 
-        1.) All functions of Lab 3
-        2.) Minimum - Find minimum of tree
-        3.) Maximum - Find maximum of tree
-        4.) Delete - Delete value from tree
-        5.) inOrder - In order traversal of tree, pushing values as function iterates
-        6.) postOrder - Post order traversal of tree, pushing values as function iterates
+### Graphs
+**Best case**
+![Best case runtimes](./Project1/graphs/best_fig.png)
 
-Project 1: Implement various sort algorithms, collect data in .csv files, plot data:
+**Average case**
+![Average case runtimes](./Project1/graphs/average_fig.png)
 
-        1.) Bubble sort
-        2.) Insertion sort
-        3.) Selection sort
-        4.) Quick sort
-
-        - Number of tests: 50 vectors each of size: 100, 200, 400, 800, 1600, 3200, 6400, 12800
-
-        - Graphs:
-
-                - Best case: 
-                        
-                        ![Best case runtimes](./Project1/graphs/best_fig.png)
-
-                - Average case:
-
-                        ![Average case runtimes](./Project1/graphs/average_fig.png)
-
-                - Worst case: 
-
-                        ![Worst case runtimes](./Project1/graphs/worst_fig.png)
+**Worst case**
+![Worst case runtimes](./Project1/graphs/worst_fig.png)
