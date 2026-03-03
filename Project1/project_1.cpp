@@ -275,7 +275,7 @@ void processData(std::string sortName, vector<vector<int>> list, void (*sortFunc
     vector<double> timeOutliers;
     bool sorted = true;
 
-    std::cout << "*************************" << std::endl;
+    std::cout << "================================================\n" << std::endl;
     std::cout << sortName << " sort on " << list.size() << " vectors of length " << list[0].size() << std::endl;
     for(int i = 0; i < list.size(); i++)
     {
@@ -290,7 +290,7 @@ void processData(std::string sortName, vector<vector<int>> list, void (*sortFunc
 
     std::cout << "Minimum: " << timeOutliers[0] << "; Mean: " << timeOutliers[1] << "; Standard Deviation: " << timeOutliers[2] << "; Maximum: " << timeOutliers[3] << std::endl;
     std::cout << std::endl;
-    std::cout << "*************************\n" << std::endl;
+    std::cout << "================================================\n"<< std::endl;
 }
 
 // Generate a vector of random integers in a given range. The ends
@@ -455,9 +455,9 @@ void runTests(vector<vector<int>> &v, int startValue, int endValue, int amount,
 
 int main()
 {
-    std::ofstream worstFile("data/worst.csv");
-    std::ofstream averageFile("data/average.csv");
-    std::ofstream bestFile("data/best.csv");
+    std::ofstream worstFile("data/worst0.csv");
+    std::ofstream averageFile("data/average0.csv");
+    std::ofstream bestFile("data/best0.csv");
 
     srand(time(NULL));
 
