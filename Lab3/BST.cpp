@@ -109,12 +109,12 @@ void BST::insertValue(int val)
 
 std::shared_ptr<Node> BST::insertValue(std::shared_ptr<Node> n, int val)
 {
-  // Recursive base case, when below cases child node is = nullptr, create new node with passed value
-  // if(n == nullptr) 
-  // {
-  //   size++;
-  //   return std::shared_ptr<Node>(new Node(val));
-  // }
+  //Recursive base case, when below cases child node is = nullptr, create new node with passed value
+  if(n == nullptr) 
+  {
+    size++;
+    return std::shared_ptr<Node>(new Node(val));
+  }
 
   if(val < n -> value)
   {
