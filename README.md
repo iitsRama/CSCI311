@@ -51,11 +51,11 @@ Benchmark setup:
 - Sizes: 100, 200, 400, 800, 1600, 3200, 6400, 12800
 
 ### Graphs
-**Best case**
+**Best case**\n
 ![Best case runtimes](./Project1/graphs/best_fig.png)
 
-**Average case**
+**Average case**\n
 ![Average case runtimes](./Project1/graphs/average_fig.png)
 
-**Worst case**
+**Worst case**\n
 ![Worst case runtimes](./Project1/graphs/worst_fig.png)
