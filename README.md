@@ -51,12 +51,12 @@ Project 1: Implement various sort algorithms, collect data in .csv files, plot d
 
                 - Best case: 
                         
-                        ![Best case runtimes]([/graphs/best_fig.png])
+                        ![Best case runtimes](graphs/best_fig.png)
 
                 - Average case:
 
-                        ![Average case runtimes]([/graphs/average_fig.png])
+                        ![Average case runtimes](graphs/average_fig.png)
 
                 - Worst case: 
 
-                        ![Worst case runtimes]([/graphs/worst_fig.png])
+                        ![Worst case runtimes](graphs/worst_fig.png)
