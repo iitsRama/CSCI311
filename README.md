@@ -10,7 +10,7 @@ Functions implemented:
 6. Primality test
 7. Sum of all primes less than N
 8. More efficient primality test
-9. More efficient sum-of-primes
+9. More efficient sum of primes
 10. Sieve of Eratosthenes
 
 ## Lab 2: Recursion
@@ -22,29 +22,29 @@ Functions implemented:
 5. Check if a list is sorted
 6. Check if a string is a palindrome
 7. Binary search
-8. Subset-sum (whether any subset sums to a target)
+8. Subset sum (check whether any subset sums to a passed integer)
 
 ## Lab 3: Binary Search Tree (BST)
 Functions implemented:
-1. `isBST` – validate BST property
-2. `search` – find node containing target value
-3. `insert` – insert value into tree
-4. `preOrder` – preorder traversal (push values into a vector)
+1. `isBST` – Check if tree is BST
+2. `search` – find node containing passed integer
+3. `insert` – insert passed value into tree
+4. `preOrder` – preorder traversal, push values into vector as function iterates
 
 ## Lab 4: BST Continued
 Includes Lab 3 plus:
-1. `minimum` – find minimum value
-2. `maximum` – find maximum value
-3. `delete` – delete a value
-4. `inOrder` – inorder traversal (push values into a vector)
-5. `postOrder` – postorder traversal (push values into a vector)
+1. `minimum` – find minimum value in tree
+2. `maximum` – find maximum value in tree
+3. `delete` – delete a passed value in tree if exists
+4. `inOrder` – inorder traversal, push values into vector as function iterates
+5. `postOrder` – postorder traversal, push values into vector as function iterates
 
 ## Project 1: Sorting Benchmark
 Algorithms:
 - Bubble sort
 - Insertion sort
 - Selection sort
-- Quicksort
+- Quick sort
 
 Benchmark setup:
 - 50 vectors per size
