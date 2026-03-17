@@ -102,24 +102,65 @@ std::shared_ptr<AVLNode> AVLTree::insertValue(std::shared_ptr<AVLNode> n, int va
   if(n == nullptr){
     n = make_shared<AVLNode>(val);
   }
-  else if(val <= n -> value)
+
+  if(val <= n -> value)
   {
     return insertValue(n -> left, val);
   }
-  else if(val > n -> value)
+  else
   {
     return insertValue(n -> right, val);
   }
+
+  // REBALANCE
+
   return n;
 }
 
 void AVLTree::deleteValue(int val)
 {
+  deleteValue(root, val);
 }
 
-std::shared_ptr<AVLNode> AVLTree::deleteValue(std::shared_ptr<AVLNode> n,
-                                              int val)
+std::shared_ptr<AVLNode> AVLTree::deleteValue(std::shared_ptr<AVLNode> n, int val)
 {
+  if(val < n -> value)
+  {
+    n -> left = deleteValue(n -> left, val);
+  }
+  else if(val > n -> value)
+  {
+    n -> right = deleteValue(n -> right, val);
+  }
+
+  if(val == n -> value)
+  {
+    size--;
+    // No children
+    if(!(n -> right && n -> left))
+    {
+      return nullptr; 
+    }
+    // One child
+    else if(n -> right == nullptr ^ n -> left == nullptr)
+    {
+      if(n -> right)
+      {
+        return n -> left;
+      }
+      else
+      {
+        return n -> right;
+      }
+    }
+    // Two children
+    else
+    {
+      return minimum(n -> right);
+    }
+  }
+
+  //REBALANCE
   return nullptr;
 }
 
@@ -148,17 +189,32 @@ std::shared_ptr<AVLNode> AVLTree::rotateRightLeft(std::shared_ptr<AVLNode> n)
   return nullptr;
 }
 
-void AVLTree::preOrder(std::shared_ptr<AVLNode> n,
-                       vector<std::shared_ptr<AVLNode>> &order)
+void AVLTree::preOrder(std::shared_ptr<AVLNode> n, vector<std::shared_ptr<AVLNode>> &order)
 {
+  if(n != nullptr)
+  {
+    order.push_back(n);
+    preOrder(n -> left, order);
+    preOrder(n -> right, order);
+  }
 }
 
-void AVLTree::inOrder(std::shared_ptr<AVLNode> n,
-                      vector<std::shared_ptr<AVLNode>> &order)
+void AVLTree::inOrder(std::shared_ptr<AVLNode> n, vector<std::shared_ptr<AVLNode>> &order)
 {
+  if(n != nullptr)
+  {
+    preOrder(n -> left, order);
+    order.push_back(n);
+    preOrder(n -> right, order);
+  }
 }
 
-void AVLTree::postOrder(std::shared_ptr<AVLNode> n,
-                        vector<std::shared_ptr<AVLNode>> &order)
+void AVLTree::postOrder(std::shared_ptr<AVLNode> n, vector<std::shared_ptr<AVLNode>> &order)
 {
+  if(n != nullptr)
+  {
+    preOrder(n -> left, order);
+    preOrder(n -> right, order);
+    order.push_back(n);
+  }
 }
