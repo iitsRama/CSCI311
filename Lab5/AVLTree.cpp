@@ -84,12 +84,31 @@ std::shared_ptr<AVLNode> AVLTree::maximum(std::shared_ptr<AVLNode> n)
 
 int getHeight(std::shared_ptr<AVLNode> n)
 {
-  return n -> height;
+  if(n != nullptr)
+  {
+    return n -> height;
+  }
+  else
+  {
+    return -1;
+  }
 }
 
 int getBalanceFactor(std::shared_ptr<AVLNode> n)
 {
-  return n -> balanceFactor;
+  return getHeight(n -> right) - getHeight(n -> left);
+}
+
+void updateHeightandBF(std::shared_ptr<AVLNode> n)
+{
+  if(n == nullptr) { return; }
+
+  int left = getHeight(n -> left);
+  int right = getHeight(n -> right);
+
+  n -> height = max(left, right) + 1;
+
+  n -> balanceFactor = right - left;
 }
 
 void AVLTree::insertValue(int val)
@@ -99,22 +118,23 @@ void AVLTree::insertValue(int val)
 
 std::shared_ptr<AVLNode> AVLTree::insertValue(std::shared_ptr<AVLNode> n, int val)
 {
-  if(n == nullptr){
+  if(n == nullptr)
+  {
     n = make_shared<AVLNode>(val);
   }
 
   if(val <= n -> value)
   {
-    return insertValue(n -> left, val);
+    n -> left = insertValue(n -> left, val);
   }
   else
   {
-    return insertValue(n -> right, val);
+    n -> right = insertValue(n -> right, val);
   }
 
-  // REBALANCE
-
-  return n;
+  updateHeightandBF(n);
+  
+  return rebalance(n);
 }
 
 void AVLTree::deleteValue(int val)
@@ -127,10 +147,12 @@ std::shared_ptr<AVLNode> AVLTree::deleteValue(std::shared_ptr<AVLNode> n, int va
   if(val < n -> value)
   {
     n -> left = deleteValue(n -> left, val);
+    updateHeightandBF(n);
   }
   else if(val > n -> value)
   {
     n -> right = deleteValue(n -> right, val);
+    updateHeightandBF(n);
   }
 
   if(val == n -> value)
@@ -146,47 +168,110 @@ std::shared_ptr<AVLNode> AVLTree::deleteValue(std::shared_ptr<AVLNode> n, int va
     {
       if(n -> right)
       {
-        return n -> left;
+        return n -> right;
       }
       else
       {
-        return n -> right;
+        return n -> left;
       }
     }
     // Two children
     else
     {
-      return minimum(n -> right);
+      std::shared_ptr<AVLNode> min = minimum(n -> right);
+      n -> value = min -> value;
+      n -> right = deleteValue(n -> right, min -> value);
     }
   }
 
   //REBALANCE
-  return nullptr;
+  updateHeightandBF(n);
+  return rebalance(n);
 }
 
 std::shared_ptr<AVLNode> AVLTree::rebalance(std::shared_ptr<AVLNode> n)
 {
-  return nullptr;
+  // Check for height and balance factor, if statements
+  // while abs(balancefactor != 2) iterate?
+  // or let balance factor calculate for all nodes so we know if root is left or right heavy?
+  
+  int bf = n -> balanceFactor;
+  int bfLeft = 0;
+  int bfRight = 0;
+  if(n -> left)
+  {
+    bfLeft = n -> left -> balanceFactor;
+  }
+
+  if(n -> right)
+  {
+    bfRight = n -> right -> balanceFactor;
+  }
+
+  if(abs(bf) == 2)
+  {
+    if(bf < -1)
+    {
+      if(bfLeft <= 0)
+      {
+        n = rotateRight(n);
+      }
+      else
+      {
+        n = rotateLeftRight(n);
+      }
+    }
+    
+    if(bf > 1)
+    {
+      if(bfLeft >= 0)
+      {
+        n = rotateLeft(n);
+      }
+      else
+      {
+        n = rotateRightLeft(n);
+      }
+    }
+  }
+
+  return n;
 }
 
 std::shared_ptr<AVLNode> AVLTree::rotateLeft(std::shared_ptr<AVLNode> n)
 {
-  return nullptr;
+  std::shared_ptr<AVLNode> x = n -> right;
+  n -> right = x -> left;
+  updateHeightandBF(n);
+  x -> left = n;
+  updateHeightandBF(x);
+  return x;
 }
 
 std::shared_ptr<AVLNode> AVLTree::rotateRight(std::shared_ptr<AVLNode> n)
 {
-  return nullptr;
+  std::shared_ptr<AVLNode> x = n -> left;
+  n -> left = x -> right;
+  updateHeightandBF(n);
+  x -> right = n;
+  updateHeightandBF(x);
+  return x;
 }
 
 std::shared_ptr<AVLNode> AVLTree::rotateLeftRight(std::shared_ptr<AVLNode> n)
 {
-  return nullptr;
+  // call rotate left on left child then rotate right
+  rotateLeft(n -> left);
+  rotateRight(n);
+  return n;
 }
 
 std::shared_ptr<AVLNode> AVLTree::rotateRightLeft(std::shared_ptr<AVLNode> n)
 {
-  return nullptr;
+  // call rotate right on right child, then rotate left
+  rotateRight(n -> right);
+  rotateLeft(n);
+  return n;
 }
 
 void AVLTree::preOrder(std::shared_ptr<AVLNode> n, vector<std::shared_ptr<AVLNode>> &order)
